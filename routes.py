@@ -161,7 +161,7 @@ def report():
     return render_template('report.html', form=form)
 
 @app.route('/maintenances')
-@check_permissions(['Admin', 'Inteligência', 'Manutenção'])
+@check_permissions(['Admin', 'Inteligência', 'Comercial' 'Manutenção'])
 @login_required
 def maintenances():
     page = request.args.get('page', 1, type=int)
@@ -186,7 +186,7 @@ def direction_maintenance():
 
 @app.route('/maintenances/update_direction/<int:maintenance_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'Manutenção','Inteligência'])
+@check_permissions(['Admin', 'Diretoria','Inteligência'])
 def update_direction(maintenance_id):
     maintenance = Report.query.get_or_404(maintenance_id)
     maintenance.status = 'Enviado à diretoria'
@@ -203,7 +203,7 @@ def update_direction(maintenance_id):
 
 @app.route('/approve-maintenance-direction/<int:maintenance_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'Inteligência'])
+@check_permissions(['Admin', 'Inteligência', 'Diretoria'])
 def approve_maintenance_direction(maintenance_id):
     maintenance = Report.query.get_or_404(maintenance_id)
     maintenance.status = 'Aprovado pela diretoria'
@@ -259,7 +259,7 @@ def approve_maintenance_direction(maintenance_id):
 
 @app.route('/admin/dashboard')
 @login_required
-@check_permissions(['Admin', 'Manutenção', 'Inteligência'])
+@check_permissions(['Admin', 'Inteligência'])
 def admin_dashboard():
     
     num_sales_requests = get_num_sales_requests()
@@ -273,7 +273,7 @@ def admin_dashboard():
 
 @app.route('/admin/dashboard/export')
 @login_required
-@check_permissions(['Admin', 'Manutenção', 'Inteligência'])
+@check_permissions(['Admin', 'Inteligência'])
 def export_logs():
     logs = Log.query.all()
     data = [{"user_id": log.user_id, "action": log.action, "timestamp": log.timestamp} for log in logs]
@@ -283,7 +283,7 @@ def export_logs():
 
 @app.route('/admin/dashboard/export_sales_requests')
 @login_required
-@check_permissions(['Admin', 'Manutenção', 'Inteligência'])
+@check_permissions(['Admin', 'Inteligência'])
 def export_sales_requests():
     sales_requests = SalesRequest.query.all()
     data = [{column.name: getattr(sr, column.name) for column in SalesRequest.__table__.columns} for sr in sales_requests]
@@ -293,7 +293,7 @@ def export_sales_requests():
 
 @app.route('/admin/dashboard/export_maintenances')
 @login_required
-@check_permissions(['Admin', 'Manutenção', 'Inteligência'])
+@check_permissions(['Admin', 'Inteligência'])
 def export_maintenances():
     reports = Report.query.all()
     data = [{column.name: getattr(report, column.name) for column in Report.__table__.columns} for report in reports]
@@ -751,7 +751,7 @@ def direction():
 
 @app.route('/approve_direction/<int:sales_request_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'CEO','Inteligência'])
+@check_permissions(['Admin', 'Diretoria', 'Inteligência'])
 def approve_direction(sales_request_id):
     sales_request = SalesRequest.query.get_or_404(sales_request_id)
     sales_request.status = 'Aprovado pela diretoria'
@@ -780,7 +780,7 @@ def approve_direction(sales_request_id):
 
 @app.route('/reject_direction/<int:sales_request_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'CEO','Inteligência'])
+@check_permissions(['Admin', 'Diretoria', 'Inteligência'])
 def reject_direction(sales_request_id):
     sales_request = SalesRequest.query.get_or_404(sales_request_id)
     sales_request.status = 'Cancelado pela diretoria'
@@ -803,7 +803,7 @@ def reject_direction(sales_request_id):
 
 @app.route('/sales_request/all')
 @login_required
-@check_permissions(['Admin', 'CEO','Comercial','Inteligência'])
+@check_permissions(['Admin', 'CEO', 'Comercial', 'Diretoria', 'Inteligência'])
 def all_sales_requests():
     page = request.args.get('page', 1, type=int)
     all_requests = SalesRequest.query.paginate(page=page, per_page=30)
@@ -868,7 +868,7 @@ def send_configuration_request(sales_request_id):
 
 @app.route('/sales_request/expedition')
 @login_required
-@check_permissions(['Admin', 'Expedição','Inteligência'])
+@check_permissions(['Admin', 'Expedição', 'Inteligência'])
 def expedition():
     expedition_requests = SalesRequest.query.all()
     return render_template('expedition.html', expedition_requests=expedition_requests)
@@ -1048,7 +1048,7 @@ def mark_as_read(notification_id):
 
 @app.route('/admin/user/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-@check_permissions(['Admin','Inteligência'])
+@check_permissions(['Admin', 'Inteligência'])
 def edit_user(id):
     user = User.query.get(id)
     if request.method == 'POST':
@@ -1063,7 +1063,7 @@ def edit_user(id):
 
 @app.route('/admin/users', methods=['GET'])
 @login_required
-@check_permissions(['Admin','Inteligência'])
+@check_permissions(['Admin', 'Inteligência'])
 def users():
     users = User.query.all()
     return render_template('users.html', users=users)
@@ -1141,7 +1141,7 @@ def entrance():
 
 @app.route('/entrance/all')
 @login_required
-@check_permissions(['Admin', 'Manutenção','Expedição','Inteligência'])
+@check_permissions(['Admin', 'Manutenção', 'Expedição', 'Inteligência'])
 def all_entrances():
     page = request.args.get('page', 1, type=int)
     all_entrances = Entrance.query.paginate(page=page, per_page=30)
@@ -1149,7 +1149,7 @@ def all_entrances():
 
 @app.route('/entrance/update_status/<int:entrance_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'Manutenção','Inteligência'])
+@check_permissions(['Admin', 'Manutenção', 'Inteligência'])
 def update_status(entrance_id):
     entrance = Entrance.query.get_or_404(entrance_id)
     entrance.status = 'Manutenção realizada'

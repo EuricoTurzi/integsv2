@@ -79,7 +79,7 @@
                         {% if current_user.access_level in ['Admin', 'Comercial', 'CEO', 'Inteligência'] %}
                         <a class="dropdown-item" href="{{ url_for('all_sales_requests') }}">Requisições</a>
                         {% endif %}
-                        {% if current_user.access_level in ['Admin', 'Expedição', 'Comercial', 'Inteligência'] %}
+                        {% if current_user.access_level in ['Admin', 'Expedição', 'Manutenção', 'Inteligência'] %}
                         <a class="dropdown-item" href="{{ url_for('all_entrances') }}">Entradas</a>
                         {% endif %}
                         <a class="dropdown-item" href="{{ url_for('sales_status') }}">Status</a>
