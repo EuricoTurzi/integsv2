@@ -1,0 +1,8 @@
+Prezado Cliente,<br/>
+Gostaríamos de informar sobre a manutenção realizada em seu equipamento eletrônico, no qual constatamos a falha na conexão do usb.<br/><br/>
+<b>Motivo da Manutenção:</b><br/>
+Durante nossa inspeção, identificamos que a porta USB do equipamento está danificada. Isso pode ser observado pela foto anexada gerando falha na leitura do equipamento. É importante compreendermos as razões pelas quais essa falha ocorreu, a fim de evitar problemas futuros semelhantes.<br/><br/>
+<b>Causa:</b><br/>
+Com base em nossa análise, as razões pelas quais a porta USB foi danificada incluem Inserção Incorreta, Força Excessiva, Conexão e Desconexão Frequentes, Curto-Circuito, Sujeira e Poeira e Falhas de Energia.<br/><br/>
+<b>Consequências:</b><br/>
+O dano no conector USB resulta em Incapacidade de Conexão, Transferência de Dados Interrompida e Carregamento Ineficaz.

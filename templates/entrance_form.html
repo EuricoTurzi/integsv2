@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Formulário de Entrada{% endblock %}
+
+{% block content %}
+<style>
+body{
+    overflow-x: hidden;
+}
+.card{
+    width: 750px;
+    box-sizing: border-box;
+    margin: 0px auto;
+    margin-bottom: 25px;
+    padding: 5px;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 400px;
+    }
+}
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Formulário de Entrada de Equipamentos</div>
+            <div class="card-body">
+                <form method="POST" id="entrance-form">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.client.label(class="form-control-label") }}
+                        {{ form.client(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.entrance_type.label(class="form-control-label") }}
+                        {{ form.entrance_type(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.model.label(class="form-control-label") }}
+                        {{ form.model(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.customization.label(class="form-control-label") }}
+                        {{ form.customization(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.type_of_receipt.label(class="form-control-label") }}
+                        {{ form.type_of_receipt(class="form-control", id="receipt-select") }}
+                    </div>
+                    <div id="recipient" class="form-group" style="display: none;">
+                        {{ form.recipients_name.label(class="form-control-label") }}
+                        {{ form.recipients_name(class="form-control") }}
+                    </div>
+                    <div id="withdrawn" class="form-group" style="display: none;">
+                        {{ form.withdrawn_by.label(class="form-control-label") }}
+                        {{ form.withdrawn_by(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.equipment_number.label(class="form-control-label") }}
+                        {{ form.equipment_number(class="form-control", placeholder="Inserir a numeração dos equipamentos com espaçamento") }}
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            {{ form.accept_terms(class="form-check-input") }}
+                            {{ form.accept_terms.label(class="form-check-label accept-terms-label") }} <a href="{{ url_for('terms_and_conditions') }}">Termos e Condições</a>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submit-button">Enviar Entrada</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    <script> 
+document.getElementById('submit-button').addEventListener('click', function() {
+    Swal.fire({
+        title: 'Enviando e-mail...',
+        html: 'Por favor, aguarde...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading()
+        },
+    });
+});
+
+    document.getElementById('receipt-select').addEventListener('change', function() {
+        var selectedReceipt = this.value;
+        var recipientsName = document.getElementById('recipient');
+        var withdrawnBy = document.getElementById('withdrawn');
+
+        if (selectedReceipt === 'Entregue na base') {
+            recipientsName.style.display = 'block';
+            recipientsName.value = recipientsName.value || 'N/A'; // Definir como 'N/A' se o campo estiver vazio
+            withdrawnBy.style.display = 'none';
+            withdrawnBy.value = 'N/A'; // Definir como 'N/A' quando não estiver visível
+        } else if (selectedReceipt === 'Retirado no cliente') {
+            withdrawnBy.style.display = 'block';
+            withdrawnBy.value = withdrawnBy.value || 'N/A'; // Definir como 'N/A' se o campo estiver vazio
+            recipientsName.style.display = 'none';
+            recipientsName.value = 'N/A'; // Definir como 'N/A' quando não estiver visível
+        } else {
+            recipientsName.style.display = 'none';
+            recipientsName.value = 'N/A'; // Definir como 'N/A' quando não estiver visível
+            withdrawnBy.style.display = 'none';
+            withdrawnBy.value = 'N/A'; // Definir como 'N/A' quando não estiver visível
+        }
+    });
+    </script>
+{% endblock %}

@@ -1,0 +1,4 @@
+Prezado Cliente,<br/>
+Gostaríamos de informar sobre a manutenção realizada em seu equipamento eletrônico, no qual não constatamos a presença de problemas.<br/><br/>
+<b>Motivo da Manutenção:</b><br/>
+Durante nossa análise minuciosa, realizamos atualizações essenciais de firmware, visando garantir o desempenho otimizado e a estabilidade operacional do equipamento.<br/>

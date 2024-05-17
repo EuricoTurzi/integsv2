@@ -1,0 +1,74 @@
+<!-- edit_maintenance.html -->
+{% extends 'base.html' %}
+
+{% block title %}Editar Manutenção{% endblock %}
+
+{% block content %}
+<style>
+    .card{
+        margin-bottom: 25px;    
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="client_name">Nome do Cliente</label>
+                        <input type="text" class="form-control" id="client_name" name="client_name" value="{{ maintenance.client_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="reason">Motivo</label>
+                        <input type="text" class="form-control" id="reason" name="reason" value="{{ maintenance.reason }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="billing">Faturamento</label>
+                        <input type="text" class="form-control" id="billing" name="billing" value="{{ maintenance.billing }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="model">Modelo</label>
+                        <input type="text" class="form-control" id="model" name="model" value="{{ maintenance.model }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="customization">Customização</label>
+                        <input type="text" class="form-control" id="customization" name="customization" value="{{ maintenance.customization }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="equipment_number">Número do Equipamento</label>
+                        <input type="text" class="form-control" id="equipment_number" name="equipment_number" value="{{ maintenance.equipment_number }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="problem_type">Tipo de Problema</label>
+                        <select class="form-control" id="problem_type" name="problem_type">
+                            <option value="Oxidação" {% if maintenance.problem_type == 'Oxidação' %} selected {% endif %}>Oxidação</option>
+                            <option value="Placa danificada" {% if maintenance.problem_type == 'Placa danificada' %} selected {% endif %}>Placa danificada</option>
+                            <option value="Placa danificada sem custo" {% if maintenance.problem_type == 'Placa danificada sem custo' %} selected {% endif %}>Placa danificada sem custo</option>
+                            <option value="USB danificado" {% if maintenance.problem_type == 'USB danificado' %} selected {% endif %}>USB danificado</option>
+                            <option value="USB danificado sem custo" {% if maintenance.problem_type == 'USB danificado sem custo' %} selected {% endif %}>USB danificado sem custo</option>
+                            <option value="Botão de acionamento danificado" {% if maintenance.problem_type == 'Botão de acionamento danificado' %} selected {% endif %}>Botão de acionamento danificado</option>
+                            <option value="Botão de acionamento danificado sem custo" {% if maintenance.problem_type == 'Botão de acionamento danificado sem custo' %} selected {% endif %}>Botão de acionamento danificado sem custo</option>
+                            <option value="Antena LoRa danificada" {% if maintenance.problem_type == 'Antena LoRa danificada' %} selected {% endif %}>Antena LoRa danificada</option>
+                            <option value="Sem problemas identificados" {% if maintenance.problem_type == 'Sem problemas identificados' %} selected {% endif %}>Sem problemas identificados</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="treatment">Tratamento</label>
+                        <select class="form-control" id="treatment" name="treatment">
+                            <option value="Oxidação" {% if maintenance.treatment == 'Oxidação' %} selected {% endif %}>Oxidação</option>
+                            <option value="Placa danificada" {% if maintenance.treatment == 'Placa danificada' %} selected {% endif %}>Placa danificada</option>
+                            <option value="USB danificado" {% if maintenance.treatment == 'USB danificado' %} selected {% endif %}>USB danificado</option>
+                            <option value="Botão de acionamento danificado" {% if maintenance.treatment == 'Botão de acionamento danificado' %} selected {% endif %}>Botão de acionamento danificado</option>
+                            <option value="Antena LoRa danificada" {% if maintenance.treatment == 'Antena LoRa danificada' %} selected {% endif %}>Antena LoRa danificada</option>
+                            <option value="Sem problemas identificados" {% if maintenance.treatment == 'Sem problemas identificados' %} selected {% endif %}>Sem problemas identificados</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

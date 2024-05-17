@@ -1,0 +1,77 @@
+<!-- report.html -->
+{% extends 'base.html' %}
+
+{% block title %}Formulário de Manutenção{% endblock %}
+
+{% block content %}
+<style>
+body{
+    overflow-x: hidden;
+}
+.card{
+    width: 750px;
+    box-sizing: border-box;
+    margin: 0px auto;
+    margin-bottom: 25px;
+    padding: 5px;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 400px;
+    }
+}
+</style>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Formulário de Manutenção</div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.client_name.label(class="form-control-label") }}
+                        {{ form.client_name(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.reason.label(class="form-control-label") }}
+                        {{ form.reason(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.billing.label(class="form-control-label") }}
+                        {{ form.billing(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.model.label(class="form-control-label") }}
+                        {{ form.model(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.customization.label(class="form-control-label") }}
+                        {{ form.customization(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.equipment_number.label(class="form-control-label") }}
+                        {{ form.equipment_number(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.problem_type.label(class="form-control-label") }}
+                        {{ form.problem_type(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.photos.label(class="form-control-label") }}
+                        {{ form.photos(class="form-control-file", multiple="multiple") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.treatment.label(class="form-control-label") }}
+                        {{ form.treatment(class="form-control") }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

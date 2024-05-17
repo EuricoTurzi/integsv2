@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+{% block title %}Formulário de Requisição de Vendas{% endblock %}
+
+{% block content %}
+<style>
+body{
+    overflow-x: hidden;
+}
+.card{
+    width: 750px;
+    box-sizing: border-box;
+    margin: 0px auto;
+    margin-bottom: 25px;
+    padding: 5px;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 400px;
+    }
+}
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Formulário de Requisição de Vendas</div>
+            <div class="card-body">
+                <form method="POST" id="sales-request-form">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.cnpj.label(class="form-control-label") }}
+                        {{ form.cnpj(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.contract_start.label(class="form-control-label") }}
+                        {{ form.contract_start(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.vigency.label(class="form-control-label") }}
+                        {{ form.vigency(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.reason.label(class="form-control-label") }}
+                        {{ form.reason(class="form-control", id="reason-select", onchange="updateInvoiceType()") }}
+                    </div>
+                    <div id="isca-fast-location" class="form-group" style="display: none;">
+                        {{ form.location.label(class="form-control-label") }}
+                        {{ form.location(class="form-control") }}
+                    </div>
+                    <div id="laudo-number" class="form-group" style="display: none;">
+                        {{ form.maintenance_number.label(class="form-control-label") }}
+                        {{ form.maintenance_number(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.client.label(class="form-control-label") }}
+                        {{ form.client(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.sales_rep.label(class="form-control-label") }}
+                        {{ form.sales_rep(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.contract_type.label(class="form-control-label") }}
+                        {{ form.contract_type(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.shipping.label(class="form-control-label") }}
+                        {{ form.shipping(class="form-control", id="shipping-select") }}
+                    </div>
+                    <div id="motoboy-fee" class="form-group" style="display: none;">
+                        {{ form.delivery_fee.label(class="form-control-label") }}
+                        {{ form.delivery_fee(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.address.label(class="form-control-label") }}
+                        {{ form.address(class="form-control", id="address-input") }}
+                        <input type="hidden" id="address-hidden" name="address" value="">
+                    </div>
+                    <div class="form-group">
+                        {{ form.contact_person.label(class="form-control-label") }}
+                        {{ form.contact_person(class="form-control", id="contact-person-input") }}
+                        <input type="hidden" id="contact-person-hidden" name="contact_person" value="">
+                    </div>
+                    <div class="form-group">
+                        {{ form.email.label(class="form-control-label") }}
+                        {{ form.email(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.phone.label(class="form-control-label") }}
+                        {{ form.phone(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.quantity.label(class="form-control-label") }}
+                        {{ form.quantity(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.model.label(class="form-control-label") }}
+                        {{ form.model(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.customization.label(class="form-control-label") }}
+                        {{ form.customization(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.tp.label(class="form-control-label") }}
+                        {{ form.tp(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.charger.label(class="form-control-label") }}
+                        {{ form.charger(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.cable.label(class="form-control-label") }}
+                        {{ form.cable(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.invoice_type.label(class="form-control-label") }}
+                        {{ form.invoice_type(class="form-control", id="invoice-type-select") }}
+                        <input type="hidden" id="invoice-type-hidden" name="invoice_type" value="">
+                    </div>
+                    <div class="form-group">
+                        {{ form.value.label(class="form-control-label") }}
+                        {{ form.value(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.total_value.label(class="form-control-label") }}
+                        {{ form.total_value(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.payment_method.label(class="form-control-label") }}
+                        {{ form.payment_method(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.observations.label(class="form-control-label") }}
+                        {{ form.observations(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            {{ form.accept_terms(class="form-check-input") }}
+                            {{ form.accept_terms.label(class="form-check-label accept-terms-label") }} <a href="{{ url_for('terms_and_conditions') }}">Termos e Condições</a>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar Requisição</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    <script> 
+    function updateInvoiceType() {
+        var reasonSelect = document.getElementById('reason-select');
+        var invoiceTypeSelect = document.getElementById('invoice-type-select');
+        var invoiceTypeHidden = document.getElementById('invoice-type-hidden');
+        var selectedReason = reasonSelect.options[reasonSelect.selectedIndex].value;
+
+        if (selectedReason === 'Aquisição nova' || selectedReason === 'Aditivo' || selectedReason === 'Extravio') {
+            invoiceTypeSelect.value = 'Com custo';
+            invoiceTypeSelect.disabled = true;
+        } else if (selectedReason === 'Isca Fast - Agente' || selectedReason === 'Antenista') {
+            invoiceTypeSelect.value = 'Sem custo';
+            invoiceTypeSelect.disabled = true;
+        } else {
+            invoiceTypeSelect.disabled = false;
+        }
+
+        // Copiar o valor para o campo oculto
+        invoiceTypeHidden.value = invoiceTypeSelect.value;
+    } 
+    // Chama a função assim que a página é carregada
+    updateInvoiceType();
+
+    document.getElementById('shipping-select').addEventListener('change', updateShippingInfo);
+        function updateShippingInfo() {
+            var shippingSelected = document.getElementById('shipping-select');
+            var addressInput = document.getElementById('address-input');
+            var addressHidden = document.getElementById('address-hidden');
+            var contactPersonInput = document.getElementById('contact-person-input');
+            var contactPersonHidden = document.getElementById('contact-person-hidden');
+            var selectedShipping = shippingSelected.options[shippingSelected.selectedIndex].value;
+
+            if (selectedShipping == 'Retirada na base') {
+                addressInput.value = 'Rua Haiti, 129 - Parque das Nações, Santo André - SP, 09280-390';
+                contactPersonInput.value = 'Regina';
+                addressInput.disabled = true;
+                contactPersonInput.disabled = true;
+            } else {
+                addressInput.disabled = false;
+                contactPersonInput.disabled = false;
+                addressInput.value = ''; // Limpa o campo de endereço
+                contactPersonInput.value = ''; // Limpa o campo de pessoa de contato
+            }
+
+            addressHidden.value = addressInput.value;
+            contactPersonHidden.value = contactPersonInput.value;
+        }
+    
+    document.getElementById('reason-select').addEventListener('change', function() {
+        var selectedReason = this.value;
+        var iscaFastLocation = document.getElementById('isca-fast-location');
+        var laudoManutencao = document.getElementById('laudo-number');
+
+        if (selectedReason === 'Isca Fast') {
+            iscaFastLocation.style.display = 'block';
+            iscaFastLocation.value = iscaFastLocation.value || 'N/A'; // Definir como 'N/A' se o campo estiver vazio
+            laudoManutencao.style.display = 'none';
+            laudoManutencao.value = 'N/A'; // Definir como 'N/A' quando não estiver visível
+        } else if (selectedReason === 'Manutenção') {
+            laudoManutencao.style.display = 'block';
+            laudoManutencao.value = laudoManutencao.value || 'N/A'; // Definir como 'N/A' se o campo estiver vazio
+            iscaFastLocation.style.display = 'none';
+            iscaFastLocation.value = 'N/A'; // Definir como 'N/A' quando não estiver visível
+        } else {
+            iscaFastLocation.style.display = 'none';
+            iscaFastLocation.value = 'N/A'; // Definir como 'N/A' quando não estiver visível
+            laudoManutencao.style.display = 'none';
+            laudoManutencao.value = 'N/A'; // Definir como 'N/A' quando não estiver visível
+        }
+    });
+
+    // Adiciona evento de mudança ao campo de envio
+    document.getElementById('shipping-select').addEventListener('change', function() {
+        var selectedShipping = this.value;
+        var motoboyFee = document.getElementById('motoboy-fee');
+        if (selectedShipping === 'Motoboy' || selectedShipping === 'Correio') {
+            motoboyFee.style.display = 'block';
+        } else {
+            motoboyFee.style.display = 'none';
+        }
+    });
+    </script>
+{% endblock %}

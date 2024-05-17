@@ -1,0 +1,93 @@
+<!-- direction.html -->
+{% extends 'base.html' %}
+
+{% block title %}Diretoria{% endblock %}
+
+{% block content %}
+<style>
+
+    body{
+        background-image: url("/static/img/wallpaper.jpg");
+        background-repeat: no-repeat;
+        background-size: cover; /* Ajusta o tamanho da imagem para cobrir todo o fundo */
+        background-attachment: fixed; /* Mantém o fundo fixo enquanto a página rola */
+    }
+    
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 30px;
+        justify-content: flex-start; /* Alinhar os itens à esquerda */
+        margin-left: 25px;
+    }
+    
+    .card {
+        width: 300px;
+        border-radius: 5px;
+        padding: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 10px;
+        line-height: 1;
+    }
+    
+    .card:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card p {
+        font-size: 16px;
+    }
+
+    .card form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+    }
+
+    .card form button {
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        width: 100%;
+        position: relative;
+    }
+
+</style>
+<div class="card-container">
+    {% for request in direction %}
+    {% if request.status == 'Rejeitado' %}
+    <div class="card" style="background-color: {% if request.status == 'Rejeitado' %}lightcoral{% endif %}">
+        <p><b>Cliente:</b> {{ request. client }} | <b>ID: </b> {{request.id}}</p>
+        <p><b>Data:</b> {{ request.date_completed }}</p>
+        <p><b>Comercial:</b> {{ request.sales_rep }}</p>
+        <p><b>Contrato:</b> {{ request.contract_type }}</p>
+        <p><b>Quantidade:</b> {{ request.quantity }}</p>
+        <p><b>Modelo:</b> {{ request.model }}</p>
+        <p><b>Valor Unitário:</b> R$ {{ request.value }}</p>
+        <p><b>Valor Total:</b> R$ {{ request.total_value}}</p>
+        <p><b>Tipo de Fatura:</b> {{ request.invoice_type }}</p>
+        <p><b>Status:</b> {{ request.status }}</p>
+        <p><b>Observações:</b> {{ request.observations }}</p>
+        
+        <!-- Botão para download de PDF -->
+        <a href="{{ url_for('download_sales_pdf', sales_request_id=request.id) }}" class="btn btn-primary">Download PDF</a>
+
+        <form action="{{ url_for('approve_direction', sales_request_id=request.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-success">Aprovar</button>
+        </form>
+        
+        <form action="{{ url_for('reject_direction', sales_request_id=request.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-danger">Rejeitar</button>
+        </form>
+        
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+<!-- login.html -->
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<style>
+    .card{
+        width: 600px;
+        margin: 0 auto;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Acesso</div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.username.label(class="form-control-label") }}
+                        {{ form.username(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password.label(class="form-control-label") }}
+                        {{ form.password(class="form-control") }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                </form>
+            </div>
+            <div class="card-footer">
+                <p class="text-muted">Não tem uma conta? <a href="{{ url_for('register') }}">Registre-se aqui</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

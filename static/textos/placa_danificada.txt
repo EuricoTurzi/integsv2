@@ -1,0 +1,8 @@
+Prezado Cliente,<br/>
+Gostaríamos de informar sobre a manutenção realizada em seu equipamento eletrônico, no qual constatamos dano físico ao equipamento.<br/><br/>
+<b>Motivo da Manutenção:</b><br/>
+Durante a inspeção cuidadosa do equipamento, identificamos que ele apresenta danos físicos significativos. Após uma análise minuciosa, constatamos que o dano foi ocasionado devido ao excesso de peso ou manuseio incorreto do equipamento.<br/><br/>
+<b>Causa: Mal uso ou excesso de peso.</b><br/>
+Com base em nossa análise, o equipamento foi exposto a condições que favoreceram esse processo. Entendemos que isso pode não ter sido intencional, mas é importante destacar que ambientes não adequados ou manuseio impróprio do equipamento pode ocasionar tais problemas.<br/><br/>
+<b>Consequências da danificação da placa do equipamento:</b><br/>
+A presença do dano na placa eletrônica pode levar a problemas como mau contato, falhas intermitentes e até mesmo danos irreversíveis em componentes vitais. Isso pode resultar em mau funcionamento do equipamento, perda de desempenho e, em casos mais graves, a necessidade de substituição de peças ou do próprio equipamento.

@@ -1,0 +1,8 @@
+Prezado Cliente,<br/>
+Gostaríamos de informar sobre a manutenção realizada em seu equipamento eletrônico, no qual constatamos dano físico na Antena LORA.<br/><br/>
+<b>Motivo da Manutenção:</b><br/>
+Durante nossa análise, identificamos que a Antena LoRa do equipamento está danificada. Esta antena desempenha um papel crucial na comunicação do equipamento, sendo responsável pela transmissão e recepção de dados através da tecnologia LoRa (Long Range).<br/><br/>
+<b>Causa: Mal uso ou impacto.</b><br/>
+As causas para o dano da antena LORA do equipamento podem incluir: Impactos Físicos, Instalação Incorreta e Excesso de peso sobre a antena.<br/><br/>
+<b>Consequências sobre o dano na Antena LORA:</b><br/>
+Os danos na Antena LORA resultam em uma variedade de problemas, tais como: Perda de Conexão, Alcance Reduzido e Falhas na Transmissão de Dados.

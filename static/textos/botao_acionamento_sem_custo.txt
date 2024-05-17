@@ -1,0 +1,8 @@
+Prezado Cliente,<br/>
+Gostaríamos de informar sobre a manutenção realizada em seu equipamento eletrônico, no qual constatamos que o botão de liga/desliga está danificado, sem uma razão aparente para tal ocorrência.<br/><br/>
+<b>Motivo da Manutenção:</b><br/>
+Durante nossa análise detalhada, observamos que o botão de acionamento do equipamento apresenta um problema, sem sinais visíveis de mau uso ou desgaste. Este botão é essencial para a operação diária do equipamento, sendo responsável pelo funcionamento de ligar e desligar.<br/><br/>
+<b>Causa:</b><br/>
+Considerando a ausência de sinais óbvios de pressão excessiva, uso incorreto ou desgaste relacionado ao mau uso, é difícil determinar precisamente a causa desse dano no botão de acionamento. Fatores como falha de fabricação, componentes internos, ou mesmo eventos aleatórios podem ter contribuído para essa situação.<br/><br/>
+<b>Consequências sobre o dano no botão do equipamento:</b><br/>
+Os danos no botão de liga/desliga podem resultar em várias dificuldades para o uso adequado do equipamento, tais como: Dificuldade de ligar ou desligar o dispositivo, operação intermitente e instabilidade no funcionamento geral.

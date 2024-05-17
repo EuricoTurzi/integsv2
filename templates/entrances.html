@@ -1,0 +1,145 @@
+<!-- sales_status.html -->
+{% extends 'base.html' %}
+
+{% block title %}Status dos Pedidos{% endblock %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+<style>
+ .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+    justify-content: flex-start; /* Alinhar os itens à esquerda */
+    margin-left: 25px;
+}
+
+.card {
+    width: 300px;
+    border-radius: 5px;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    line-height: 1;
+    padding-top: 25px;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.card p {
+    font-size: 16px;
+}
+
+.card form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+    }
+
+.card form button {
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    width: 100%;
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 375px;
+    }
+}
+
+label{
+    color: white;
+}
+
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="status-filter">Status:</label>
+            <select id="status-filter" class="form-control">
+                <option value="">Todos</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Manutenção realizada">Manutenção realizada</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="search">Buscar requisições:</label>
+            <input type="text" id="search" placeholder="Buscar requisições..." class="form-control">
+        </div>
+    </div>
+</div>
+
+<div class="card-container" id="card-container">
+    {% for entrance in all_entrances %}
+    <div class="card">
+        <p><b>Cliente:</b> {{ entrance.client }} | <b>ID: </b> {{entrance.id}}</p>
+        <p><b>Data:</b> {{ entrance.date }}</p>
+        <p><b>Tipo de Entrada:</b> {{ entrance.entrance_type }}</p>
+        <p><b>Modelo:</b> {{ entrance.model }}</p>
+        <p><b>Customização: </b>{{entrance.customization }}</p>
+        <p><b>Status: </b>{{ entrance.status }}</p>
+
+        <!-- Botões de aprovar, rejeitar e download -->
+        <form action="{{ url_for('update_status', entrance_id=entrance.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-success">Aprovar</button>
+        </form>
+        <form action="{{ url_for('download_entrance_pdf', entrance_id=entrance.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-dark">Download</button>
+        </form>
+
+    </div>
+    {% endfor %}
+    <footer class="footer">
+        <div class="container">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if all_entrances.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('all_entrances', page=all_entrances.prev_num) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Anterior</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                        </li>
+                    {% endif %}
+    
+                    {% for page_num in range(1, all_entrances.pages + 1) %}
+                    <li class="page-item {% if page_num == all_entrances.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('all_entrances', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                {% endfor %}
+    
+                {% if all_entrances.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('all_entrances', page=all_entrances.next_num) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Próximo</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a>
+                    </li>
+                {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </footer>
+</div>
+{% endblock %}

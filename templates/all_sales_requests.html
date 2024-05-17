@@ -1,0 +1,161 @@
+<!-- all_sales_requests.html -->
+{% extends 'base.html' %}
+
+{% block title %}Requisições de Vendas{% endblock %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+<style>
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+    justify-content: flex-start; /* Alinhar os itens à esquerda */
+    margin-left: 25px;
+}
+
+.card {
+    width: 300px;
+    border-radius: 5px;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.card p {
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 375px;
+    }
+}
+
+label{
+    color: white;
+}
+
+#button1{
+    margin-bottom: 5px;
+}
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="filter">Comercial:</label>
+            <select id="filter" class="form-control">
+                <option value="">Todos</option>
+                <option value="Daniel">Daniel</option>
+                <option value="Thiago">Thiago</option>
+                <option value="Marcio">Marcio</option>
+                <option value="GoldenSat">GoldenSat</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="status-filter">Status:</label>
+            <select id="status-filter" class="form-control">
+                <option value="">Todos</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Aprovado">Aprovado</option>
+                <option value="Aprovado pela diretoria">Aprovado pela diretoria</option>
+                <option value="Rejeitado">Rejeitado</option>
+                <option value="Cancelado pela diretoria">Cancelado pela diretoria</option>
+                <option value="Editado">Editado</option>
+                <option value="Pronto para o envio">Pronto para o envio</option>
+                <option value="Enviado para a expedição">Enviado para a expedição</option>
+                <option value="Pedido enviado ao cliente">Pedido enviado ao cliente</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="invoice-filter">Tipo de Fatura:</label>
+            <select id="invoice-filter" class="form-control">
+                <option value="">Todos</option>
+                <option value="Com custo">Com custo</option>
+                <option value="Sem custo">Sem custo</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="search">Buscar requisições:</label>
+            <input type="text" id="search" placeholder="Buscar requisições..." class="form-control">
+        </div>
+    </div>
+</div>
+
+<div class="card-container" id="card-container">
+    {% for request in all_requests %}
+        <div class="card" style="background-color: {% if request.status in ['Aprovado', 'Aprovado pela diretoria'] %}lightgreen{% elif request.status == 'Pendente' %}lightyellow{% elif request.status in ['Rejeitado'] %}lightcoral{% elif request.status in ['Cancelado pela diretoria'] %}Salmon{% elif request.status == 'Editado' %}lightblue{% elif request.status == 'Pronto para o envio' %}plum{% elif request.status == 'Enviado para a expedição' %}coral{% elif request.status == 'Pedido enviado ao cliente' %}cyan{% endif %};">
+            <p><b>Cliente:</b> {{ request.client }} | <b>ID: </b> {{request.id}}</p>
+            <p><b>Data:</b> {{ request.date_completed }}</p>
+            <p><b>Comercial:</b> {{ request.sales_rep }}</p>
+            <p><b>Contrato:</b> {{ request.contract_type }}</p>
+            <p><b>Quantidade:</b> {{ request.quantity }}</p>
+            <p><b>Modelo:</b> {{ request.model }}</p>
+            <p><b>Valor Unitário:</b> R$ {{ request.value }}</p>
+            <p><b>Valor Total:</b> R$ {{ request.total_value}}</p>
+            <p><b>Tipo de Fatura:</b> {{ request.invoice_type }}</p>
+            <p><b>Status:</b> {{ request.status }}</p>
+            <p><b>Data de envio:</b> {{ request.date_sent_to_customer }}</p>
+            <p><b>Observações:</b> {{ request.observations }}</p>
+
+            <!-- Botão para download de PDF -->
+            <a href="{{ url_for('download_sales_pdf', sales_request_id=request.id) }}" class="btn btn-primary" id="button1" >Download PDF</a>
+            {% if current_user.access_level in ['Admin','Inteligência'] %}
+            <a href="{{ url_for('edit_sales_request', sales_request_id=request.id) }}" class="btn btn-danger">Editar</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+    <footer class="footer">
+        <div class="container">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if all_requests.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('all_sales_requests', page=all_requests.prev_num) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Anterior</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                        </li>
+                    {% endif %}
+    
+                    {% for page_num in range(1, all_requests.pages + 1) %}
+                    <li class="page-item {% if page_num == all_requests.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('all_sales_requests', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                {% endfor %}
+    
+                {% if all_requests.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('all_sales_requests', page=all_requests.next_num) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Próximo</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a>
+                    </li>
+                {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </footer>
+</div>
+{% endblock %}

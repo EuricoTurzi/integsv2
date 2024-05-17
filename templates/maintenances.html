@@ -1,0 +1,156 @@
+<!-- maintenances.html -->
+{% extends 'base.html' %}
+
+{% block title %}Lista de Manutenções{% endblock %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+<style>
+
+    body{
+        background-image: url("/static/img/wallpaper.jpg");
+        background-repeat: no-repeat;
+        background-size: cover; /* Ajusta o tamanho da imagem para cobrir todo o fundo */
+        background-attachment: fixed; /* Mantém o fundo fixo enquanto a página rola */
+    }
+    
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 30px;
+        justify-content: flex-start; /* Alinhar os itens à esquerda */
+        margin-left: 25px;
+    }
+    
+    .card {
+        width: 300px;
+        border-radius: 5px;
+        padding: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 10px;
+        line-height: 1;
+    }
+    
+    .card:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card p {
+        font-size: 16px;
+    }
+
+    .card form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+    }
+
+    .card form button {
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        width: 100%;
+        position: relative;
+    }
+
+    label {
+        color: white;
+    }
+
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="status-filter">Status:</label>
+            <select id="status-filter" class="form-control">
+                <option value="">Todos</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Aprovado">Aprovado</option>
+                <option value="Rejeitado">Rejeitado</option>
+                <option value="Editado">Editado</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="invoice-filter">Tipo de Fatura:</label>
+            <select id="invoice-filter" class="form-control">
+                <option value="">Todos</option>
+                <option value="Com custo">Com custo</option>
+                <option value="Sem custo">Sem custo</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="search">Buscar requisições:</label>
+            <input type="text" id="search" placeholder="Buscar requisições..." class="form-control">
+        </div>
+    </div>
+</div>
+
+<div class="card-container" id="card-container">
+    {% for maintenance in maintenances.items %}
+    <div class="card" style="background-color: {% if maintenance.status == 'Aprovado' %}lightgreen{% elif maintenance.status == 'Pendente' %}lightyellow{% elif maintenance.status == 'Rejeitado' %}lightcoral{% elif maintenance.status == 'Editado' %}lightblue{% endif %};">
+        <p><b>Cliente:</b> {{ maintenance.client_name }} | <b>ID: </b> {{ maintenance.id }}</p>
+        <p><b>Data:</b> {{ maintenance.date_completed}}</p>
+        <p><b>Motivo:</b> {{ maintenance.reason }}</p>
+        <p><b>Modelo:</b> {{ maintenance.model }}</p>
+        <p><b>ID do Equipamento:</b> {{ maintenance.equipment_number }}</p>
+        <p><b>Tipo de Problema:</b> {{ maintenance.problem_type }}</p>
+        <p><b>Tipo de Fatura:</b> {{ maintenance.billing }}</p>
+        <p><b>Status:</b> {{ maintenance.status }}</p>
+        
+        <!-- Botões de aprovar e rejeitar -->
+        {% if current_user.access_level in ['Admin','Inteligência'] %}
+        <form action="{{ url_for('approve_maintenance', maintenance_id=maintenance.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-success" id="approve-button-{{maintenance.id}}">Aprovar</button>
+        </form>
+
+        <form action="{{ url_for('reject_maintenance', maintenance_id=maintenance.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-warning">Rejeitar</button>
+        </form>
+
+        <form action="{{ url_for('delete_maintenance', maintenance_id=maintenance.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-danger">Excluir</button>
+        </form>
+
+        <form action="{{ url_for('update_direction', maintenance_id=maintenance.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-danger">Enviar à diretoria</button>
+        </form>
+        {% endif %}
+        <form action="{{ url_for('download_maintenance_pdf', maintenance_id=maintenance.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-dark">Baixar PDF</button>
+        </form>
+
+    </div>
+    <script>
+        document.getElementById('approve-button-{{maintenance.id}}').addEventListener('click', function() {
+            Swal.fire({
+                title: 'Enviando e-mail...',
+                html: 'Por favor, aguarde...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                },
+            });
+        });
+    </script>
+    {% endfor %}
+    
+    {% include 'footer.html' %}
+        
+</div>
+{% endblock %}

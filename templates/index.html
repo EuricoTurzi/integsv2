@@ -1,0 +1,15 @@
+<!-- index.html -->
+{% extends 'base.html' %}
+
+{% block title %}Home - InteGS{% endblock %}
+
+{% block content %}
+<div class="jumbotron animated fadeIn">
+    <h1 class="display-4">Bem-vindo ao InteGS!</h1>
+    <p class="lead">O InteGS é um sistema integrado de gestão de manutenção e vendas, projetado para otimizar suas operações e impulsionar a eficiência.</p>
+    <hr class="my-4">
+    <p>Com o InteGS, você tem o controle total sobre suas atividades de manutenção e vendas. Registre, visualize e gere relatórios detalhados sobre suas tarefas de manutenção. Acompanhe suas requisições de vendas e transforme oportunidades em negócios bem-sucedidos. Tudo isso em uma interface intuitiva e fácil de usar.</p>
+    <p>Descubra o poder do InteGS e leve suas operações de manutenção e vendas para o próximo nível.</p>
+    <a class="btn btn-primary btn-lg animated infinite pulse delay-2s" href="{{ url_for('login') }}" role="button">Comece sua jornada com o InteGS agora</a>
+</div>
+{% endblock %}

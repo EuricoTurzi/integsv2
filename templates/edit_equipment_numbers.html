@@ -1,0 +1,41 @@
+<!-- edit_equipment_numbers.html -->
+{% extends 'base.html' %}
+
+{% block title %}Adicionar Equipamentos{% endblock %}
+
+{% block content %}
+<style>
+    li {
+        list-style: none;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <li class="expedition-request-card">
+                    <strong>Cliente:</strong> {{ sales_request.client }}<br>
+                    <strong>Comercial:</strong> {{ sales_request.sales_rep }}<br>
+                    <strong>Contrato:</strong> {{ sales_request.contract_type }}<br>
+                    <strong>Quantidade:</strong> {{ sales_request.quantity }}<br>
+                    <strong>Modelo:</strong> {{ sales_request.model }}<br>
+                    <strong>Status:</strong> {{ sales_request.status }}<br>
+                    <strong>Observações:</strong> {{ sales_request.observations }}<br>
+                    <strong>Equipamentos:</strong> {{ sales_request.equipment_numbers }}<br>
+                    <strong>Quantidade de Equipamentos Inseridos:</strong> {{ sales_request.equipment_numbers.split(';')|length if sales_request.equipment_numbers else 0 }}<br><br>
+                    
+                    <form action="{{ url_for('edit_equipment_numbers', sales_request_id=sales_request.id) }}" method="post" style="display: inline;">
+                        <div class="form-group">
+                            <label for="equipmentNumbers">Números dos Equipamentos (separados por espaço)</label>
+                            <input type="text" class="form-control" id="equipmentNumbers" name="equipment_numbers" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                    <a href="{{ url_for('configuration') }}" class="btn btn-primary">Voltar</a>
+                    </li>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

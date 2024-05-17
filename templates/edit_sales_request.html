@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .card{
+        margin-bottom: 25px;    
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    <div class="form-group">
+                      <label for="cnpj">CNPJ</label>
+                      <input type="text" class="form-control" id="cnpj" name="cnpj" value="{{ sales_request.cnpj }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="contract_start">Início do Contrato</label>
+                      <input type="text" class="form-control" id="contract_start" name="contract_start" value="{{ sales_request.contract_start }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="vigency">Vigência</label>
+                      <input type="text" class="form-control" id="vigency" name="vigency" value="{{ sales_request.vigency }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="reason">Motivo</label>
+                      <input type="text" class="form-control" id="reason" name="reason" value="{{ sales_request.reason }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="client">Cliente</label>
+                      <input type="text" class="form-control" id="client" name="client" value="{{ sales_request.client }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="sales_rep">Representante de Vendas</label>
+                      <input type="text" class="form-control" id="sales_rep" name="sales_rep" value="{{ sales_request.sales_rep }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="contract_type">Tipo de Contrato</label>
+                      <input type="text" class="form-control" id="contract_type" name="contract_type" value="{{ sales_request.contract_type }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="shipping">Envio</label>
+                      <input type="text" class="form-control" id="shipping" name="shipping" value="{{ sales_request.shipping }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="address">Endereço</label>
+                      <input type="text" class="form-control" id="address" name="address" value="{{ sales_request.address }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="contact_person">Pessoa de Contato</label>
+                      <input type="text" class="form-control" id="contact_person" name="contact_person" value="{{ sales_request.contact_person }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control" id="email" name="email" value="{{ sales_request.email }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="phone">Telefone</label>
+                      <input type="tel" class="form-control" id="phone" name="phone" value="{{ sales_request.phone }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="quantity">Quantidade</label>
+                      <input type="number" class="form-control" id="quantity" name="quantity" value="{{ sales_request.quantity }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="model">Modelo</label>
+                      <input type="text" class="form-control" id="model" name="model" value="{{ sales_request.model }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="customization">Personalização</label>
+                      <input type="text" class="form-control" id="customization" name="customization" value="{{ sales_request.customization }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="tp">TP</label>
+                      <input type="text" class="form-control" id="tp" name="tp" value="{{ sales_request.tp }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="charger">Carregador</label>
+                      <input type="text" class="form-control" id="charger" name="charger" value="{{ sales_request.charger }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="cable">Cabo</label>
+                      <input type="text" class="form-control" id="cable" name="cable" value="{{ sales_request.cable }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="invoice_type">Tipo de Fatura</label>
+                      <input type="text" class="form-control" id="invoice_type" name="invoice_type" value="{{ sales_request.invoice_type }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="value">Valor</label>
+                      <input type="text" class="form-control" id="value" name="value" value="{{ sales_request.value }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="total_value">Valor Total</label>
+                      <input type="text" class="form-control" id="total_value" name="total_value" value="{{ sales_request.total_value }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="payment_method">Método de Pagamento</label>
+                      <input type="text" class="form-control" id="payment_method" name="payment_method" value="{{ sales_request.payment_method }}">
+                    </div>
+                    <div class="form-group">
+                      <label for="observations">Observações</label>
+                      <textarea class="form-control" id="observations" name="observations">{{ sales_request.observations }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+</div>
+  
+{% endblock %}

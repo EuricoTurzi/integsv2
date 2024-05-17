@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Editar Perfil</div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="username" class="form-control-label">Nome de usuário</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-control-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="profile_picture" class="form-control-label">Foto de perfil</label>
+                        <select name="profile_picture" id="profilePictureSelect" class="form-control">
+                            <option value="logo-int.png" {% if user.profile_picture == 'logo-int.png' %}selected{% endif %}>Foto 1</option>
+                            <option value="logo-perfil2.jpeg" {% if user.profile_picture == 'logo-perfil2.jpeg' %}selected{% endif %}>Foto 2</option>
+                            <option value="logo-perfil3.jpeg" {% if user.profile_picture == 'logo-perfil3.jpeg' %}selected{% endif %}>Foto 3</option>
+                            <option value="logo-perfil4.jpeg" {% if user.profile_picture == 'logo-perfil4.jpeg' %}selected{% endif %}>Foto 4</option>
+                            <option value="logo-perfil.png" {% if user.profile_picture == 'logo-perfil.png' %}selected{% endif %}>Foto 5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <img id="profilePicturePreview" src="{{ user.profile_picture }}" alt="Prévia da foto de perfil" style="max-width: 150px; display: block; margin: 0 auto;">
+                    </div>
+                    <div class="form-group">
+                        <label for="additional_info" class="form-control-label">Informações adicionais</label>
+                        <textarea class="form-control" id="additional_info" name="additional_info">{{ user.additional_info }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="access_level" class="form-control-label">Nível de acesso</label>
+                        <select class="form-control" id="access_level" name="access_level">
+                            <option value="User" {% if user.access_level == 'User' %}selected{% endif %}>Usuário</option>
+                            <option value="Admin" {% if user.access_level == 'Admin' %}selected{% endif %}>Administrador</option>
+                            <option value="CEO" {% if user.access_level == 'CEO' %}selected{% endif %}>CEO | Presidente</option>
+                            <option value="Diretoria" {% if user.access_level == 'Diretoria' %}selected{% endif %}>Diretor</option>
+                            <option value="Inteligência" {% if user.access_level == 'Inteligência' %}selected{% endif %}>Setor de Inteligência</option>
+                            <option value="Manutenção" {% if user.access_level == 'Manutenção' %}selected{% endif %}>Setor de Manutenção</option>
+                            <option value="Comercial" {% if user.access_level == 'Comercial' %}selected{% endif %}>Setor Comercial</option>
+                            <option value="Configuração" {% if user.access_level == 'Configuração' %}selected{% endif %}>Setor de Configuração</option>
+                            <option value="Expedição" {% if user.access_level == 'Expedição' %}selected{% endif %}>Setor de Expedição</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const profilePictureSelect = document.getElementById('profilePictureSelect');
+    const profilePicturePreview = document.getElementById('profilePicturePreview');
+
+    // Define a imagem inicial (foto1.jpg)
+    const initialImagePath = '/static/img/logo-int.png'; // Substitua pelo caminho correto
+    profilePicturePreview.src = initialImagePath;
+
+    profilePictureSelect.addEventListener('change', () => {
+        const selectedValue = profilePictureSelect.value;
+        const imagePath = `/static/img/${selectedValue}`; // Substitua pelo caminho correto
+
+        profilePicturePreview.src = imagePath;
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,102 @@
+<!-- rejected_maintenances.html -->
+{% extends 'base.html' %}
+
+{% block title %}Manutenções Rejeitadas{% endblock %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+<style>
+    body{
+        background-image: url("/static/img/wallpaper.jpg");
+        background-repeat: no-repeat;
+        background-size: cover; /* Ajusta o tamanho da imagem para cobrir todo o fundo */
+        background-attachment: fixed; /* Mantém o fundo fixo enquanto a página rola */
+    }
+    
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 30px;
+        justify-content: flex-start; /* Alinhar os itens à esquerda */
+        margin-left: 25px;
+    }
+    
+    .card {
+        width: 300px;
+        border-radius: 5px;
+        padding: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        line-height: 1;
+    }
+    
+    .card:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card p {
+        font-size: 16px;
+    }
+
+    .card form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+    }
+
+    .card form button {
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        width: 100%;
+        position: relative;
+    }
+
+    label {
+        color: white;
+    }
+
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="search">Buscar requisições:</label>
+            <input type="text" id="search" placeholder="Buscar requisições..." class="form-control">
+        </div>
+    </div>
+</div>
+
+<div class="card-container">
+    {% for maintenance in maintenances %}
+    <div class="card" style="background-color: {% if maintenance.status == 'Rejeitado' %}lightcoral{% endif %};">
+        <p><b>Cliente:</b> {{ maintenance.client_name }}</p>
+        <p><b>Data:</b> {{ maintenance.date_completed}}</p>
+        <p><b>Motivo:</b> {{ maintenance.reason }}</p>
+        <p><b>Modelo:</b> {{ maintenance.model }}</p>
+        <p><b>ID do Equipamento:</b> {{ maintenance.equipment_number }}</p>
+        <p><b>Tipo de Problema:</b> {{ maintenance.problem_type }}</p>
+        <p><b>Faturamento:</b> {{ maintenance.billing }}</p>
+        <p><b>Status:</b> {{ maintenance.status }}</p>
+        
+        <form action="{{ url_for('edit_maintenance', maintenance_id=maintenance.id) }}" method="get" style="display: inline;">
+            <button type="submit" class="btn btn-primary">Editar</button>
+        </form>
+        <form action="{{ url_for('send_maintenance', maintenance_id=maintenance.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-success">Enviar</button>
+        </form>
+        <form action="{{ url_for('download_maintenance_pdf', maintenance_id=maintenance.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-dark">Baixar PDF</button>
+        </form>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+<!-- expedition.html -->
+{% extends 'base.html' %}
+
+{% block title %}Expedição{% endblock %}
+
+{% block content %}
+<style>
+
+    body{
+        background-image: url("/static/img/wallpaper.jpg");
+        background-repeat: no-repeat;
+        background-size: cover; /* Ajusta o tamanho da imagem para cobrir todo o fundo */
+        background-attachment: fixed; /* Mantém o fundo fixo enquanto a página rola */
+    }
+    
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 30px;
+        justify-content: flex-start; /* Alinhar os itens à esquerda */
+        margin-left: 25px;
+    }
+    
+    .card {
+        width: 300px;
+        border-radius: 5px;
+        padding: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 10px;
+        line-height: 1;
+    }
+    
+    .card:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card p {
+        font-size: 16px;
+    }
+
+    .card form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+    }
+
+    .card form button {
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        width: 100%;
+        position: relative;
+    }
+
+</style>
+<div class="card-container">
+    {% for request in expedition_requests %}
+    {% if request.status == 'Enviado para a expedição' %}
+    <div class="card">
+        <p><b>Cliente:</b> {{ request. client }} | <b>ID: </b> {{request.id}}</p>
+        <p><b>Data:</b> {{ request.date_completed }}</p>
+        <p><b>Comercial:</b> {{ request.sales_rep }}</p>
+        <p><b>Contrato:</b> {{ request.contract_type }}</p>
+        <p><b>Quantidade:</b> {{ request.quantity }}</p>
+        <p><b>Modelo:</b> {{ request.model }}</p>
+        <p><b>Customização: </b>{{request.customization }}</p>
+        <p><b>Status:</b> {{ request.status }}</p>
+        <p><b>Observações:</b> {{ request.observations }}</p>
+        
+        <!-- Botão para download de PDF -->
+        <a href="{{ url_for('download_pdf', sales_request_id=request.id) }}" class="btn btn-primary">Download PDF</a>
+
+        <!-- Botão para marcar como enviado -->
+        <form action="{{ url_for('mark_as_sent', sales_request_id=request.id) }}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-success" id="approve-button-{{request.id}}"">Enviado</button>
+        </form>
+    </div>
+    {% endif %}
+    <script>
+        document.getElementById('approve-button-{{request.id}}').addEventListener('click', function() {
+            Swal.fire({
+                title: 'Enviando e-mail...',
+                html: 'Por favor, aguarde...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                },
+            });
+        });
+    </script>
+    {% endfor %}
+</div>
+{% endblock %}

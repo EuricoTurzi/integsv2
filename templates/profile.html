@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Perfil</div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    {% if current_user.profile_picture %}
+                        <img src="{{ url_for('static', filename='img/' + current_user.profile_picture) }}" class="rounded-circle img-fluid" style="max-width: 200px; max-height: 200px;" alt="Foto do perfil">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='img/logo-golden.png') }}" class="rounded-circle img-fluid" style="max-width: 200px; max-height: 200px;" alt="Foto padrão">
+                    {% endif %}
+                </div>
+                <p><strong>Nome de usuário:</strong> {{ current_user.username }}</p>
+                <p><strong>E-mail:</strong> {{ current_user.email }}</p>
+                <p><strong>Descrição:</strong> {{ current_user.additional_info }}</p>
+                <p><strong>Nível de acesso:</strong> {{ current_user.access_level }}</p>
+                {% if current_user.access_level in ['Admin','Inteligência', 'Manutenção'] %}
+                <p><strong>Manutenções realizadas:</strong> {{ num_maintenances }}</p>
+                {% endif %}
+                {% if current_user.access_level in ['Admin','Inteligência', 'Comercial'] %}
+                <p><strong>Requisições realizadas:</strong> {{ num_sales_requests }}</p>
+                {% endif %}
+                <div class="mt-4">
+                    <h5><i class="fas fa-bell"></i> Notificações</h5>
+                    <p>Você tem <strong>{{ current_user.unread_notifications }}</strong> notificações não lidas.</p>
+                    <!-- Adicione um ícone de sino ou outro elemento visual aqui -->
+                </div>
+                <a href="{{ url_for('edit_profile') }}" class="btn btn-primary mt-3">
+                    <i class="fas fa-pencil-alt"></i> Editar Perfil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel de Administrativo{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <h1 class="display-4 text-center" style="color: white;">Painel de Administração InteGS</h1>
+            <hr class="my-4">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">Visão Geral da Plataforma</div>
+                <div class="card-body">
+                    <h5 class="card-title">Estatísticas Importantes</h5>
+                    <p class="card-text">
+                        <span class="badge badge-success" style="display: flex; justify-content: space-between; align-items: center;">Requisições de Vendas: {{ num_sales_requests }} <a href="{{ url_for('export_sales_requests') }}" class="btn btn-success">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        </span></br>
+                        <span class="badge badge-primary" style="display: flex; justify-content: space-between; align-items: center;">Manutenções Realizadas: {{ num_maintenances }} <a href="{{ url_for('export_maintenances') }}" class="btn btn-primary">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">Logs de Ações</div>
+                <div class="card-body">
+                    <h5 class="card-title" style="display: flex; justify-content: space-between; align-items: center;">Atividades Recentes <a href="{{ url_for('export_logs') }}" class="btn btn-primary">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    </h5>
+                    <div class="text-right mb-3">
+
+                    </div>
+                    <div class="card-text">
+                        <ul class="list-group list-group-flush">
+                            {% for log_entry in log_entries.items %}
+                            <li class="list-group-item">
+                                {{ log_entry.user_id }} - {{ log_entry.action }}
+                                <small class="text-muted"> | {{ log_entry.timestamp }}</small>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="text-center mt-3">
+                        {% if log_entries.has_prev %}
+                            <a href="{{ url_for('admin_dashboard', page=log_entries.prev_num) }}">
+                                <i class="fas fa-arrow-left"></i>
+                            </a>
+                        {% endif %}
+                        {% for page_num in log_entries.iter_pages() %}
+                            {% if page_num %}
+                                {% if page_num != log_entries.page %}
+                                    <a href="{{ url_for('admin_dashboard', page=page_num) }}">{{ page_num }}</a>
+                                {% else %}
+                                    <strong>{{ page_num }}</strong>
+                                {% endif %}
+                            {% else %}
+                                ...
+                            {% endif %}
+                        {% endfor %}
+                        {% if log_entries.has_next %}
+                            <a href="{{ url_for('admin_dashboard', page=log_entries.next_num) }}">
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
