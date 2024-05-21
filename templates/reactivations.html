@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Reativações{% endblock %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+<style>
+    .card-container {
+       display: flex;
+       flex-wrap: wrap;
+       gap: 20px;
+       margin-top: 30px;
+       justify-content: flex-start; /* Alinhar os itens à esquerda */
+       margin-left: 25px;
+   }
+   
+   .card {
+       width: 300px;
+       border-radius: 5px;
+       padding: 20px;
+       transition: transform 0.3s, box-shadow 0.3s;
+       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+       position: relative;
+       overflow: hidden;
+       margin-bottom: 10px;
+       line-height: 1;
+   }
+   
+   .card:hover {
+       transform: translateY(-10px) scale(1.05);
+       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+   }
+   
+   .card p {
+       font-size: 16px;
+   }
+   
+   @media (max-width: 768px) {
+       .card {
+           width: 375px;
+       }
+   }
+   
+   label{
+       color: white;
+   }
+   
+   li{
+    list-style: none;
+   }
+   </style>
+    <div class="container">
+            <div class="col-md-3">
+                <label for="search">Buscar requisições:</label>
+                <input type="text" id="search" placeholder="Buscar requisições..." class="form-control">
+            </div>
+        </div>
+    </div>
+   
+    <div class="card-container" id="card-container">
+        {% for reactivation in reactivations %}
+            <div class="card">
+                
+                <p><b>Cliente:</b> {{ reactivation.client }} | <b>ID:</b> {{ reactivation.id }}</p>
+                <p><b>Data:</b> {{ reactivation.date }}</p>
+                <p><b>Motivo:</b> {{ reactivation.reactivation_reason }}</p>
+                <p><b>Canal de Solicitação:</b> {{ reactivation.request_channel }}</p>
+                <p><b>Valor Unitário:</b> R$ {{ reactivation.value }}</p>
+                <p><b>Valor Total:</b> R$ {{ reactivation.total_value }}</p>
+                <p><b>Observações:</b> {{ reactivation.observation }}</p>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#equipmentModal{{ reactivation.id }}">
+                    Ver Equipamentos
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+
+<!-- Modal para exibir os equipamentos -->
+{% for reactivation in reactivations %}
+<div class="modal fade" id="equipmentModal{{ reactivation.id }}" tabindex="-1" role="dialog" aria-labelledby="equipmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="equipmentModalLabel">Equipamentos da Reativação ID: {{ reactivation.id }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    {% for equipment in reactivation.equipments %}
+                        <li>ID: {{ equipment.equipment_id }} | CCID: {{ equipment.equipment_ccid }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

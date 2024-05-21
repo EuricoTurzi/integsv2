@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Formulário de Reativação{% endblock %}
+
+{% block content %}
+<style>
+body {
+    overflow-x: hidden;
+}
+.card {
+    width: 750px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    margin-bottom: 25px;
+    padding: 5px;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+@media (max-width: 768px) {
+    .card {
+        width: 400px;
+    }
+}
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Formulário de Reativação de Equipamentos</div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('reactivation_form') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.client.label(class="form-control-label") }}
+                        {{ form.client(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.reactivation_reason.label(class="form-control-label") }}
+                        {{ form.reactivation_reason(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.request_channel.label(class="form-control-label") }}
+                        {{ form.request_channel(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.value.label(class="form-control-label") }}
+                        {{ form.value(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.total_value.label(class="form-control-label") }}
+                        {{ form.total_value(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.observation.label(class="form-control-label") }}
+                        {{ form.observation(class="form-control") }}
+                    </div>
+                    <h2>Equipamentos</h2>
+                    <div id="equipments">
+                        {% for equipment_form in form.equipments %}
+                            <div class="form-row">
+                                <div class="col">
+                                    {{ equipment_form.equipment_id.label(class="form-control-label") }}
+                                    {{ equipment_form.equipment_id(class="form-control") }}
+                                </div>
+                                <div class="col">
+                                    {{ equipment_form.equipment_ccid.label(class="form-control-label") }}
+                                    {{ equipment_form.equipment_ccid(class="form-control") }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div></br>
+                    <button type="button" class="btn btn-secondary" id="add-equipment">Adicionar Equipamento</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Função para adicionar campos de equipamento
+    function addEquipmentFields() {
+    var container = document.getElementById('equipments');
+    var count = container.querySelectorAll('.form-row').length;
+
+    if(count < 18) {
+        var equipmentGroupDiv = document.createElement('div');
+        equipmentGroupDiv.classList.add('form-row', 'equipment-group');
+        equipmentGroupDiv.innerHTML = `
+            <div class="col">
+                <label for="equipments-${count}-equipment_id">ID do Equipamento:</label>
+                <input type="text" name="equipments-${count}-equipment_id" class="form-control" required>
+            </div>
+            <div class="col">
+                <label for="equipments-${count}-equipment_ccid">CCID do Equipamento:</label>
+                <input type="text" name="equipments-${count}-equipment_ccid" class="form-control" required>
+            </div>
+        `;
+        container.appendChild(equipmentGroupDiv);
+    } else {
+        alert('Número máximo de equipamentos atingido.');
+    }
+}
+    
+    document.getElementById('add-equipment').addEventListener('click', addEquipmentFields);
+    
+    // Adicionar os primeiros campos de equipamento ao carregar a página
+    window.onload = function() {
+        addEquipmentFields(); // Adiciona o primeiro conjunto de campos
+    };
+    </script>
+{% endblock %}

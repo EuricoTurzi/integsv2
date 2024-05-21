@@ -5,7 +5,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
-from models import User
+from models import User, db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
@@ -21,7 +21,8 @@ app.config['MAIL_DEFAULT_SENDER'] = 'gikesaj434@dxice.com'  # Remetente padrão 
 
 mail = Mail(app)
 
-db = SQLAlchemy()
+db.init_app(app)
+
 migrate = Migrate(app, db)
 
 login_manager = LoginManager()
@@ -35,8 +36,5 @@ def load_user(user_id):
 from routes import *
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.init_app(app)
-        db.create_all() 
         app.run(debug=True)
         # app.run(host='0.0.0.0', port=5050)

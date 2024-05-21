@@ -2,7 +2,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, ValidationError, SelectField, MultipleFileField, IntegerField, BooleanField, FloatField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, ValidationError, SelectField, MultipleFileField, IntegerField, BooleanField, FormField, FieldList, Form
 from wtforms.validators import DataRequired, Email, EqualTo, Optional
 
 class RegisterForm(FlaskForm):
@@ -135,3 +135,16 @@ class EntranceForm(FlaskForm):
 
     def process_equipment_number(self):
         self.equipment_number.data = self.equipment_number.data.replace(' ', ';')
+
+class EquipmentForm(Form):
+    equipment_id = StringField('ID do Equipamento', validators=[DataRequired()])
+    equipment_ccid = StringField('CCID do Equipamento', validators=[DataRequired()])
+
+class ReactivationForm(FlaskForm):
+    client = StringField('Nome do Cliente', validators=[DataRequired()])
+    reactivation_reason = StringField('Motivo da Reativação', validators=[DataRequired()])
+    request_channel = StringField('Canal de Solicitação', validators=[DataRequired()])
+    equipments = FieldList(FormField(EquipmentForm), min_entries=1, max_entries=30)
+    value = StringField('Valor Unitário', validators=[DataRequired()])
+    total_value = StringField('Valor Total', validators=[DataRequired()]) 
+    observation = TextAreaField('Observações')

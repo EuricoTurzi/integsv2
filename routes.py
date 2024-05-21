@@ -7,8 +7,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 from flask_mail import Message
 from app import app, mail
-from forms import RegisterForm, LoginForm, ReportForm, ProfileForm, ChangePasswordForm, SalesRequestForm, EntranceForm
-from models import db, User, Report, SalesRequest, Log, Notification, Entrance
+from forms import RegisterForm, LoginForm, ReportForm, ProfileForm, ChangePasswordForm, SalesRequestForm, EntranceForm, ReactivationForm
+from models import db, User, Report, SalesRequest, Log, Notification, Entrance, Reactivation, Equipment
 from pdf_maintenance import generate_pdf
 from pdf_expedition import generate_expedition_pdf
 from pdf_sales import general_pdf
@@ -181,7 +181,8 @@ def get_num_maintenances():
 @check_permissions(['Admin','Diretoria','Inteligência'])
 def direction_maintenance():
     page = request.args.get('page', 1, type=int)
-    maintenances = Report.query.paginate(page=page, per_page=30)
+    
+    maintenances = Report.query.filter_by(status='Enviado à diretoria').paginate(page=page, per_page=30)
     return render_template('direction_maintenance.html', maintenances=maintenances)
 
 @app.route('/maintenances/update_direction/<int:maintenance_id>', methods=['POST'])
@@ -261,7 +262,12 @@ def approve_maintenance_direction(maintenance_id):
 @login_required
 @check_permissions(['Admin', 'Inteligência'])
 def admin_dashboard():
+
+    def get_total_sales_values():
+        total_value = db.session.query(db.func.sum(SalesRequest.total_value)).scalar()
+        return total_value if total_value is not None else 0
     
+    total_sales_values = get_total_sales_values()
     num_sales_requests = get_num_sales_requests()
     num_maintenances = get_num_maintenances()
     page = request.args.get('page', 1, type=int)
@@ -269,7 +275,8 @@ def admin_dashboard():
     log_entries = Log.query.paginate(page=page, per_page=5)
 
     return render_template('admin_dashboard.html', num_sales_requests=num_sales_requests,
-                           num_maintenances=num_maintenances, log_entries=log_entries)
+                           num_maintenances=num_maintenances, log_entries=log_entries,
+                           total_sales_values=total_sales_values)
 
 @app.route('/admin/dashboard/export')
 @login_required
@@ -1123,7 +1130,7 @@ def entrance():
                     <p>Prezados(as)</p></br>
 
                     <p>É com satisfação que informamos que os equipamentos referentes ao pedido <b>'{entrance.id}'</b> do cliente <b>'{entrance.client}'</b> foram recebidos.</p>
-                    <p>Em anexo a este e-mail, você encontrará o protocolo de entrada, que detalha todas as verificações realizadas, as condições de recebimento dos equipamentos </p><br>
+                    <p>Em anexo a este e-mail, você encontrará o protocolo de entrada, que detalha todas as verificações realizadas, as condições de recebimento dos equipamentos </p>
 
                     <p>Atenciosamente,</p><br>
 
@@ -1148,11 +1155,11 @@ def all_entrances():
     return render_template('entrances.html', all_entrances=all_entrances)
 
 @app.route('/entrance/update_status/<int:entrance_id>', methods=['POST'])
-@login_required
 @check_permissions(['Admin', 'Manutenção', 'Inteligência'])
-def update_status(entrance_id):
+def update_entrance_status(entrance_id):
     entrance = Entrance.query.get_or_404(entrance_id)
-    entrance.status = 'Manutenção realizada'
+    entrance.maintenance_status = 'Manutenção realizada'
+    entrance.returned_equipment_numbers = request.form.get('equipment_returned')  # Corrigir o nome do campo
     db.session.commit()
 
     flash('Status da entrada atualizado para "Manutenção realizada"!', 'info')
@@ -1176,3 +1183,43 @@ def download_entrance_pdf(entrance_id):
         as_attachment=True,
         download_name=filename
     )
+
+@app.route('/reactivation/form', methods=['GET', 'POST'])
+@login_required
+@check_permissions(['Admin', 'Comercial', 'Inteligência'])
+def reactivation_form():
+    form = ReactivationForm()
+    if form.validate_on_submit():
+        reactivation = Reactivation(
+            client=form.client.data,
+            reactivation_reason=form.reactivation_reason.data,
+            request_channel=form.request_channel.data,
+            value=form.value.data,
+            total_value=form.total_value.data,
+            observation=form.observation.data
+        )
+        db.session.add(reactivation)
+        db.session.flush()  # Isso garante que o objeto reactivation tenha um ID antes de continuar
+
+        # Processar cada par de ID e CCID
+        for i in range(18):  # Assumindo que você tem no máximo 18 equipamentos
+            equipment_id = request.form.get(f'equipments-{i}-equipment_id', None)
+            equipment_ccid = request.form.get(f'equipments-{i}-equipment_ccid', None)
+            if equipment_id and equipment_ccid:
+                equipment = Equipment(
+                    reactivation_id=reactivation.id,
+                    equipment_id=equipment_id,
+                    equipment_ccid=equipment_ccid
+                )
+                db.session.add(equipment)
+
+        db.session.commit()
+        flash('Reativação cadastrada com sucesso!')
+        return redirect(url_for('reactivation_form'))
+
+    return render_template('reactivation_form.html', form=form)
+
+@app.route('/reactivation/all', methods=['GET'])
+def reactivations():
+    reactivations = Reactivation.query.all()
+    return render_template('reactivations.html', reactivations=reactivations)

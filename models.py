@@ -127,5 +127,26 @@ class Entrance(db.Model):
     recipients_name = db.Column(db.String(50), default= 'n/a')
     withdrawn_by = db.Column(db.String(50), default= 'n/a')
     equipment_numbers = db.Column(db.String(200), nullable=False)
-    status = db.Column(db.String(20), nullable=False, default='Pendente')
+    maintenance_status = db.Column(db.String(50), default='Pendente')
+    returned_equipment_numbers = db.Column(db.String(200))
     accept_terms = db.Column(db.Boolean, default=False)
+
+class Reactivation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(20), nullable=True, default=lambda: datetime.now(tz=fuso_horario_brasilia).strftime('%d/%m/%Y %H:%M'))
+    client = db.Column(db.String(120), nullable=False)
+    reactivation_reason = db.Column(db.String(120), nullable=False)
+    request_channel = db.Column(db.String(90), nullable=False)
+    equipments = db.relationship('Equipment', backref='reactivation', lazy=True)
+    value = db.Column(db.String(50), nullable=False)
+    total_value = db.Column(db.String(50), nullable=False)
+    observation = db.Column(db.Text)
+
+    def __repr__(self):
+        return f'<Reactivation {self.nome_cliente}>'
+    
+class Equipment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    reactivation_id = db.Column(db.Integer, db.ForeignKey('reactivation.id'), nullable=False)
+    equipment_id = db.Column(db.String(100), nullable=False)
+    equipment_ccid = db.Column(db.String(100), nullable=False)

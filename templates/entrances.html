@@ -84,24 +84,35 @@ label{
 
 <div class="card-container" id="card-container">
     {% for entrance in all_entrances %}
-    <div class="card">
+    <div class="card" style="background-color: {% if entrance.status == 'Manutenção realizada' %}lightgreen{% endif %};">
         <p><b>Cliente:</b> {{ entrance.client }} | <b>ID: </b> {{entrance.id}}</p>
         <p><b>Data:</b> {{ entrance.date }}</p>
         <p><b>Tipo de Entrada:</b> {{ entrance.entrance_type }}</p>
         <p><b>Modelo:</b> {{ entrance.model }}</p>
         <p><b>Customização: </b>{{entrance.customization }}</p>
-        <p><b>Status: </b>{{ entrance.status }}</p>
+        <p><b>Status da Manutenção:</b> {{ entrance.maintenance_status }}</p>
+        <p><b>Equipamentos Retornando:</b> {{ entrance.returned_equipment_numbers }}</p>
 
-        <!-- Botões de aprovar, rejeitar e download -->
-        <form action="{{ url_for('update_status', entrance_id=entrance.id) }}" method="post" style="display: inline;">
-            <button type="submit" class="btn btn-success">Aprovar</button>
-        </form>
+        {% if current_user.access_level in ['Admin','Inteligência', 'Manutenção'] %}
+        <button onclick="showUpdateForm('{{ entrance.id }}')" class="btn btn-primary">Atualizar Status</button>
+        {% endif %}
         <form action="{{ url_for('download_entrance_pdf', entrance_id=entrance.id) }}" method="post" style="display: inline;">
             <button type="submit" class="btn btn-dark">Download</button>
         </form>
-
+                <!-- Formulário de atualização de status escondido -->
+            <div id="updateForm{{ entrance.id }}" style="display:none;">
+                <form action="{{ url_for('update_entrance_status', entrance_id=entrance.id) }}" method="post" class="form-inline">
+                    <div class="form-group mb-2">
+                        <label for="equipment_returned{{ entrance.id }}" class="sr-only">Equipamentos Retornando:</label>
+                        <input type="text" class="form-control" id="equipment_returned{{ entrance.id }}" name="equipment_returned" placeholder="Insira os números dos equipamentos" style="margin-right: 10px;">
+                    </div>
+                    <button type="submit" class="btn btn-success mb-2">Salvar Alterações</button>
+                </form>
+            </div>
     </div>
+
     {% endfor %}
+
     <footer class="footer">
         <div class="container">
             <nav aria-label="Page navigation">
@@ -142,4 +153,12 @@ label{
         </div>
     </footer>
 </div>
+
+<script>
+    // Função para exibir o formulário de atualização de status
+    function showUpdateForm(entranceId) {
+        var updateForm = document.getElementById('updateForm' + entranceId);
+        updateForm.style.display = 'block';
+    }
+    </script>
 {% endblock %}
