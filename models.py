@@ -1,6 +1,6 @@
 # models.py
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
+from sqlalchemy import func, Numeric
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
@@ -64,7 +64,7 @@ class SalesRequest(db.Model):
     sales_rep = db.Column(db.String(50))
     contract_type = db.Column(db.String(50))
     shipping = db.Column(db.String(50))
-    delivery_fee = db.Column(db.Float, default='n/a')
+    delivery_fee = db.Column(Numeric(precision=16, scale=2))
     address = db.Column(db.String(200))
     contact_person = db.Column(db.String(100))
     email = db.Column(db.String(120))
@@ -76,8 +76,8 @@ class SalesRequest(db.Model):
     charger = db.Column(db.String(100))
     cable = db.Column(db.String(100))
     invoice_type = db.Column(db.String(50))
-    value = db.Column(db.String(50))
-    total_value = db.Column(db.String(50))
+    value = db.Column(Numeric(precision=16, scale=2))
+    total_value = db.Column(Numeric(precision=16, scale=2))
     payment_method = db.Column(db.String(50))
     observations = db.Column(db.Text)
     accept_terms = db.Column(db.Boolean, default=False)
@@ -150,3 +150,41 @@ class Equipment(db.Model):
     reactivation_id = db.Column(db.Integer, db.ForeignKey('reactivation.id'), nullable=False)
     equipment_id = db.Column(db.String(100), nullable=False)
     equipment_ccid = db.Column(db.String(100), nullable=False)
+
+class EquipmentStock(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    model = db.Column(db.String(50))
+    quantity_in_stock = db.Column(db.Integer, default=0)
+
+class Provider(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    km_allowance = db.Column(db.Integer)
+    hour_allowance = db.Column(db.Time)
+    activation_value = db.Column(db.Float)
+    km_excess_value = db.Column(db.Float)
+    excess_value = db.Column(db.Float)
+    
+class Client(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    km_allowance = db.Column(db.Integer)
+    hour_allowance = db.Column(db.Time)
+    activation_value = db.Column(db.Float)
+    km_excess_value = db.Column(db.Float)
+    excess_value = db.Column(db.Float)
+
+class Activation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
+    provider_id = db.Column(db.Integer, db.ForeignKey('provider.id'))
+    client_id = db.Column(db.Integer, db.ForeignKey('client.id', name='fk_client_id'))
+    plates = db.Column(db.String(50))
+    agents = db.Column(db.String(50))
+    equipment_id = db.Column(db.String(50))
+    initial_km = db.Column(db.Integer)
+    final_km = db.Column(db.Integer)
+    toll = db.Column(db.Float)
+    client_toll = db.Column(db.Float)
+    status = db.Column(db.String(20), default='Pendente')

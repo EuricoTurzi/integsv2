@@ -1,14 +1,14 @@
 # routes.py
 import os, io, json
-from flask import render_template, redirect, url_for, flash, send_file, request, jsonify
+from flask import render_template, redirect, url_for, flash, send_file, request, jsonify, make_response
 from flask_login import current_user, login_required, login_user, logout_user
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 from flask_mail import Message
 from app import app, mail
-from forms import RegisterForm, LoginForm, ReportForm, ProfileForm, ChangePasswordForm, SalesRequestForm, EntranceForm, ReactivationForm
-from models import db, User, Report, SalesRequest, Log, Notification, Entrance, Reactivation, Equipment
+from forms import RegisterForm, LoginForm, ReportForm, ProfileForm, ChangePasswordForm, SalesRequestForm, EntranceForm, ReactivationForm, EquipmentStockForm, ActivationForm, ProviderForm, ClientForm, ActivationEditForm
+from models import db, User, Report, SalesRequest, Log, Notification, Entrance, Reactivation, Equipment, EquipmentStock, Activation, Provider, Client
 from pdf_maintenance import generate_pdf
 from pdf_expedition import generate_expedition_pdf
 from pdf_sales import general_pdf
@@ -17,8 +17,21 @@ from datetime import datetime
 from functools import wraps
 import pandas as pd
 from playsound import playsound
+from io import BytesIO
+from openpyxl import Workbook
 
 bcrypt = Bcrypt()
+
+EQUIPMENT_VALUES ={
+    'GS 410': 152.50,
+    'GS 4410': 295.00,
+    'GS 449': 310.75,   
+    'GS 33': 150.00,
+    'Localizador GS310': 163.20,
+    'Imobilizador GS340': 279.30,
+    'ESEYE': 13.05,
+    '1NCE': 10.00,
+}
 
 def create_notification(user, type, content):
     notification = Notification(user_id=user.id, type=type, content=content)
@@ -156,12 +169,12 @@ def report():
 
         # Feedback para o usuário
         flash('Relatório enviado com sucesso!', 'success')
-        return redirect(url_for('index'))
+        return redirect(url_for('report'))
 
     return render_template('report.html', form=form)
 
 @app.route('/maintenances')
-@check_permissions(['Admin', 'Inteligência', 'Comercial' 'Manutenção'])
+@check_permissions(['Admin', 'Inteligência', 'Comercial', 'Diretoria', 'CEO', 'Manutenção'])
 @login_required
 def maintenances():
     page = request.args.get('page', 1, type=int)
@@ -178,7 +191,7 @@ def get_num_maintenances():
 
 @app.route('/maintenances/direction')
 @login_required
-@check_permissions(['Admin','Diretoria','Inteligência'])
+@check_permissions(['Admin', 'Diretoria', 'CEO', 'Inteligência'])
 def direction_maintenance():
     page = request.args.get('page', 1, type=int)
     
@@ -187,7 +200,7 @@ def direction_maintenance():
 
 @app.route('/maintenances/update_direction/<int:maintenance_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'Diretoria','Inteligência'])
+@check_permissions(['Admin', 'Inteligência'])
 def update_direction(maintenance_id):
     maintenance = Report.query.get_or_404(maintenance_id)
     maintenance.status = 'Enviado à diretoria'
@@ -260,23 +273,32 @@ def approve_maintenance_direction(maintenance_id):
 
 @app.route('/admin/dashboard')
 @login_required
-@check_permissions(['Admin', 'Inteligência'])
+@check_permissions(['Admin', 'CEO', 'Inteligência'])
 def admin_dashboard():
 
     def get_total_sales_values():
         total_value = db.session.query(db.func.sum(SalesRequest.total_value)).scalar()
         return total_value if total_value is not None else 0
     
+    def get_num_reactivated_equipments():
+        return Equipment.query.filter(Equipment.reactivation_id.isnot(None)).count()
+    
+    def get_total_stock_value():
+        equipments = EquipmentStock.query.all()
+        total_value = sum(equipment.quantity_in_stock * EQUIPMENT_VALUES.get(equipment.model, 0) for equipment in equipments)
+        return total_value
+    
     total_sales_values = get_total_sales_values()
+    total_stock_value = get_total_stock_value()
     num_sales_requests = get_num_sales_requests()
     num_maintenances = get_num_maintenances()
+    num_reactivated_equipments = get_num_reactivated_equipments()
     page = request.args.get('page', 1, type=int)
-    # Obtém os registros de log de ações
     log_entries = Log.query.paginate(page=page, per_page=5)
 
     return render_template('admin_dashboard.html', num_sales_requests=num_sales_requests,
                            num_maintenances=num_maintenances, log_entries=log_entries,
-                           total_sales_values=total_sales_values)
+                           total_sales_values=total_sales_values,  num_reactivated_equipments=num_reactivated_equipments,total_stock_value=total_stock_value)
 
 @app.route('/admin/dashboard/export')
 @login_required
@@ -594,14 +616,14 @@ def reject_maintenance(maintenance_id):
 
 @app.route('/maintenances/rejected')
 @login_required
-@check_permissions(['Admin', 'Manutenção','Inteligência'])
+@check_permissions(['Admin', 'Manutenção', 'Inteligência', 'Diretoria'])
 def rejected_maintenances():
     rejected_maintenances = Report.query.filter_by(status='Rejeitado').all()
     return render_template('rejected_maintenances.html', maintenances=rejected_maintenances)
 
 @app.route('/send-maintenance/<int:maintenance_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'Manutenção','Inteligência'])
+@check_permissions(['Admin', 'Manutenção', 'Inteligência'])
 def send_maintenance(maintenance_id):
     maintenance = Report.query.get_or_404(maintenance_id)
     maintenance.status = "Editado"
@@ -624,7 +646,7 @@ def send_maintenance(maintenance_id):
 
 @app.route('/sales_request', methods=['GET', 'POST'])
 @login_required
-@check_permissions(['Admin', 'Comercial','Inteligência'])
+@check_permissions(['Admin', 'Comercial', 'Inteligência'])
 def sales_request():
     form = SalesRequestForm()
     if form.validate_on_submit():
@@ -634,13 +656,13 @@ def sales_request():
             contract_start=form.contract_start.data,
             vigency=form.vigency.data,
             reason=form.reason.data,
-            location = form.location.data,
+            location=form.location.data,
             client=form.client.data,
             sales_rep=form.sales_rep.data,
             contract_type=form.contract_type.data,
             shipping=form.shipping.data,
             maintenance_number=form.maintenance_number.data,
-            delivery_fee = form.delivery_fee.data,
+            delivery_fee=form.delivery_fee.data,
             address=form.address.data,
             contact_person=form.contact_person.data,
             email=form.email.data,
@@ -659,25 +681,31 @@ def sales_request():
             accept_terms=form.accept_terms.data,
         )
         
-        db.session.add(sales_request)
-        db.session.commit()
+        # Verificar se há estoque suficiente antes de confirmar a venda
+        equipment_stock = EquipmentStock.query.filter_by(model=form.model.data).first()
+        if equipment_stock and equipment_stock.quantity_in_stock >= form.quantity.data:
+            # Atualizar o estoque
+            equipment_stock.quantity_in_stock -= form.quantity.data
+            db.session.add(sales_request)
+            db.session.commit()
 
-        # Criar a notificação
-        ceo = User.query.filter_by(access_level='CEO').first()
-        if ceo:
-            create_notification(ceo, 'Nova Requisição de Venda', 'Uma nova requisição de venda foi criada.')
-            playsound('static/img/alarme.mp3')
+            # Criar a notificação
+            ceo = User.query.filter_by(access_level='CEO').first()
+            if ceo:
+                create_notification(ceo, 'Nova Requisição de Venda', 'Uma nova requisição de venda foi criada.')
+                playsound('static/img/alarme.mp3')
 
-        # Registrar a ação no histórico
-        action = f"Enviou uma requisição de venda"
-        log = Log(user_id=current_user.username, action=action)
-        db.session.add(log)
-        db.session.commit()
+            # Registrar a ação no histórico
+            action = f"Enviou uma requisição de venda"
+            log = Log(user_id=current_user.username, action=action)
+            db.session.add(log)
+            db.session.commit()
 
-        flash('Requisição de vendas enviada com sucesso!', 'success')
-        return redirect(url_for('sales_request'))
-    else:
-          print(form.errors)
+            flash('Requisição de vendas enviada com sucesso e estoque atualizado!', 'success')
+            return redirect(url_for('sales_request'))
+        else:
+            flash('Quantidade insuficiente no estoque para o modelo solicitado.', 'danger')
+
     return render_template('sales_request_form.html', form=form)
 
 @app.route('/terms_and_conditions')
@@ -686,14 +714,14 @@ def terms_and_conditions():
 
 @app.route('/sales_request/ceo')
 @login_required
-@check_permissions(['Admin', 'CEO','Inteligência'])
+@check_permissions(['Admin', 'CEO', 'Inteligência'])
 def ceo_approval_requests():
     ceo_approval_requests = SalesRequest.query.all()
     return render_template('ceo_approval_requests.html', ceo_approval_requests=ceo_approval_requests)
 
 @app.route('/approve_ceo_approval_request/<int:sales_request_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'CEO','Inteligência'])
+@check_permissions(['Admin', 'CEO', 'Inteligência'])
 def approve_ceo_approval_request(sales_request_id):
     sales_request = SalesRequest.query.get_or_404(sales_request_id)
     sales_request.status = 'Aprovado'
@@ -722,7 +750,7 @@ def approve_ceo_approval_request(sales_request_id):
 
 @app.route('/reject_ceo_approval_request/<int:sales_request_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'CEO','Inteligência'])
+@check_permissions(['Admin', 'CEO', 'Inteligência'])
 def reject_ceo_approval_request(sales_request_id):
     sales_request = SalesRequest.query.get_or_404(sales_request_id)
     sales_request.status = 'Rejeitado'
@@ -751,7 +779,7 @@ def reject_ceo_approval_request(sales_request_id):
 
 @app.route('/sales_request/direction')
 @login_required
-@check_permissions(['Admin', 'Diretoria','Inteligência'])
+@check_permissions(['Admin', 'Diretoria', 'CEO', 'Inteligência'])
 def direction():
     direction = SalesRequest.query.all()
     return render_template('direction.html', direction=direction)
@@ -818,14 +846,14 @@ def all_sales_requests():
 
 @app.route('/sales_request/configuration')
 @login_required
-@check_permissions(['Admin', 'Configuração','Inteligência'])
+@check_permissions(['Admin', 'Configuração', 'Inteligência'])
 def configuration():
     configuration_requests = SalesRequest.query.all()
     return render_template('configuration.html', configuration_requests=configuration_requests)
 
 @app.route('/edit_equipment_numbers/<int:sales_request_id>', methods=['GET', 'POST'])
 @login_required
-@check_permissions(['Admin', 'Configuração','Inteligência'])
+@check_permissions(['Admin', 'Configuração', 'Inteligência'])
 def edit_equipment_numbers(sales_request_id):
     sales_request = SalesRequest.query.get_or_404(sales_request_id)
     if request.method == 'POST':
@@ -847,7 +875,7 @@ def edit_equipment_numbers(sales_request_id):
 
 @app.route('/send_configuration_request/<int:sales_request_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'Configuração','Inteligência'])
+@check_permissions(['Admin', 'Configuração', 'Inteligência'])
 def send_configuration_request(sales_request_id):
     sales_request = SalesRequest.query.get_or_404(sales_request_id)
     sales_request.status = 'Enviado para a expedição'
@@ -875,14 +903,14 @@ def send_configuration_request(sales_request_id):
 
 @app.route('/sales_request/expedition')
 @login_required
-@check_permissions(['Admin', 'Expedição', 'Inteligência'])
+@check_permissions(['Admin', 'Expedição', 'CEO', 'Inteligência'])
 def expedition():
     expedition_requests = SalesRequest.query.all()
     return render_template('expedition.html', expedition_requests=expedition_requests)
 
 @app.route('/mark_as_sent/<int:sales_request_id>', methods=['POST'])
 @login_required
-@check_permissions(['Admin', 'Expedição','Inteligência'])
+@check_permissions(['Admin', 'Expedição', 'Inteligência'])
 def mark_as_sent(sales_request_id):
     sales_request = SalesRequest.query.get_or_404(sales_request_id)
     sales_request.status = 'Pedido enviado ao cliente'
@@ -1113,13 +1141,11 @@ def entrance():
             create_notification(manutencao, 'Uma entrada de equipamento foi realizada', 'Uma entrada de equipamento foi realizada')
             playsound('static/img/alarme.mp3')
 
-        # Registrar a ação no histórico
         action = f"Deu entrada em equipamentos"
         log = Log(user_id=current_user.username, action=action)
         db.session.add(log)
         db.session.commit()
 
-        # Nome do arquivo para o download
         filename = f'Protocolo de Entrada - {entrance.client} - {entrance.id}.pdf'
 
         send_email(subject=f'Protocolo de Entrada | {entrance.client} - {entrance.id}',
@@ -1148,7 +1174,7 @@ def entrance():
 
 @app.route('/entrance/all')
 @login_required
-@check_permissions(['Admin', 'Manutenção', 'Expedição', 'Inteligência'])
+@check_permissions(['Admin', 'Manutenção', 'Expedição', 'CEO', 'Inteligência', 'Diretoria'])
 def all_entrances():
     page = request.args.get('page', 1, type=int)
     all_entrances = Entrance.query.paginate(page=page, per_page=30)
@@ -1167,16 +1193,12 @@ def update_entrance_status(entrance_id):
 
 @app.route('/download_entrance_pdf/<int:entrance_id>', methods=['POST'])
 def download_entrance_pdf(entrance_id):
-    # Recupere as informações da manutenção do banco de dados
     entrance = Entrance.query.get_or_404(entrance_id)
 
-    # Gere o PDF com base nas informações da manutenção
     pdf_data = generate_entrance_pdf(entrance, app)
 
-    # Nome do arquivo para o download
     filename = f'Protocolo de Entrada - {entrance_id}.pdf'
 
-    # Retorne o PDF como uma resposta para o cliente
     return send_file(
         io.BytesIO(pdf_data),
         mimetype='application/pdf',
@@ -1199,7 +1221,7 @@ def reactivation_form():
             observation=form.observation.data
         )
         db.session.add(reactivation)
-        db.session.flush()  # Isso garante que o objeto reactivation tenha um ID antes de continuar
+        db.session.flush()
 
         # Processar cada par de ID e CCID
         for i in range(18):  # Assumindo que você tem no máximo 18 equipamentos
@@ -1214,12 +1236,295 @@ def reactivation_form():
                 db.session.add(equipment)
 
         db.session.commit()
-        flash('Reativação cadastrada com sucesso!')
+        flash('Reativação cadastrada com sucesso!', 'success')
         return redirect(url_for('reactivation_form'))
 
     return render_template('reactivation_form.html', form=form)
 
 @app.route('/reactivation/all', methods=['GET'])
+@login_required
+@check_permissions(['Admin', 'Comercial', 'CEO', 'Inteligência'])
 def reactivations():
     reactivations = Reactivation.query.all()
     return render_template('reactivations.html', reactivations=reactivations)
+
+@app.route('/stock', methods=['GET'])
+@login_required
+@check_permissions(['Admin', 'Inteligência', 'CEO'])
+def view_stock():
+    form_entry = EquipmentStockForm(prefix="entry")
+    form_withdrawal = EquipmentStockForm(prefix="withdrawal")
+    equipment_stock = EquipmentStock.query.all()
+    return render_template('stock_management.html', 
+                           form_entry=form_entry, 
+                           form_withdrawal=form_withdrawal, 
+                           equipment_stock=equipment_stock)
+
+@app.route('/stock/add', methods=['POST'])
+@login_required
+@check_permissions(['Admin', 'Inteligência'])
+def add_to_stock():
+    model = request.form.get('entry-model')
+    quantity_str = request.form.get('entry-quantity_in_stock')
+    
+    if quantity_str is None:
+        flash('Quantidade inválida.', 'danger')
+        return redirect(url_for('view_stock'))
+    
+    try:
+        quantity = int(quantity_str)
+    except ValueError:
+        flash('Quantidade deve ser um número válido.', 'danger')
+        return redirect(url_for('view_stock'))
+    
+    equipment = EquipmentStock.query.filter_by(model=model).first()
+    if equipment:
+        equipment.quantity_in_stock += quantity
+        db.session.commit()
+        flash('Quantidade atualizada com sucesso!', 'success')
+    else:
+        value = EQUIPMENT_VALUES.get(model, 0.0) 
+        new_equipment = EquipmentStock(model=model, quantity_in_stock=quantity)
+        db.session.add(new_equipment)
+        db.session.commit()
+        flash('Equipamento adicionado ao estoque com sucesso!', 'success')
+    
+    return redirect(url_for('view_stock'))
+
+@app.route('/stock/withdraw', methods=['POST'])
+@login_required
+@check_permissions(['Admin', 'Inteligência'])
+def withdraw_from_stock():
+    model = request.form.get('withdrawal-model')
+    quantity_str = request.form.get('withdrawal-quantity_in_stock')
+    
+    if quantity_str is None:
+        flash('Quantidade inválida.', 'danger')
+        return redirect(url_for('view_stock'))
+    
+    try:
+        quantity = int(quantity_str)
+    except ValueError:
+        flash('Quantidade deve ser um número válido.', 'danger')
+        return redirect(url_for('view_stock'))
+    
+    equipment = EquipmentStock.query.filter_by(model=model).first()
+    if equipment and equipment.quantity_in_stock >= quantity:
+        equipment.quantity_in_stock -= quantity
+        db.session.commit()
+        flash('Equipamento removido do estoque com sucesso!', 'success')
+    else:
+        flash('Quantidade insuficiente no estoque.', 'danger')
+    
+    return redirect(url_for('view_stock'))
+
+@app.route('/activation', methods=['GET', 'POST'])
+@login_required
+@check_permissions(['Acompanhamento'])
+def activation():
+    form = ActivationForm()
+    form.provider.choices = [(p.id, p.name) for p in Provider.query.all()]
+
+    if form.validate_on_submit():
+        activation = Activation(
+            start_time=form.start_time.data,
+            end_time=form.end_time.data,
+            provider_id=form.provider.data,
+            plates=form.plates.data,
+            agents=form.agents.data,
+            equipment_id=form.equipment_id.data,
+            initial_km=form.initial_km.data,
+            final_km=form.final_km.data,
+            toll=form.toll.data
+        )
+        db.session.add(activation)
+        db.session.commit()
+        flash('Acionamento registrado com sucesso!', 'success')
+        return redirect(url_for('activation'))
+
+    return render_template('activation.html', form=form)
+
+@app.route('/provider', methods=['GET', 'POST'])
+@login_required
+@check_permissions(['Acompanhamento'])
+def add_provider():
+    form = ProviderForm()
+    if form.validate_on_submit():
+        provider = Provider(
+            name=form.name.data,
+            km_allowance=form.km_allowance.data,
+            hour_allowance=form.hour_allowance.data,
+            activation_value=form.activation_value.data,
+            km_excess_value=form.km_excess_value.data,
+            excess_value=form.excess_value.data
+        )
+        db.session.add(provider)
+        db.session.commit()
+        flash('Prestador adicionado com sucesso!', 'success')
+        return redirect(url_for('add_provider'))
+    return render_template('provider.html', form=form)
+
+@app.route('/client', methods=['GET', 'POST'])
+@login_required
+@check_permissions(['Acompanhamento'])
+def add_client():
+    form = ClientForm()
+    if form.validate_on_submit():
+        client = Client(
+            name=form.name.data,
+            km_allowance=form.km_allowance.data,
+            hour_allowance=form.hour_allowance.data,
+            activation_value=form.activation_value.data,
+            km_excess_value=form.km_excess_value.data,
+            excess_value=form.excess_value.data
+        )
+        db.session.add(client)
+        db.session.commit()
+        flash('Cliente adicionado com sucesso!', 'success')
+        return redirect(url_for('add_client'))
+    return render_template('client.html', form=form)
+
+@app.route('/activation/<int:id>', methods=['GET'])
+@login_required
+@check_permissions(['Acompanhamento'])
+def activation_details(id):
+    activation = Activation.query.get(id)
+    provider = Provider.query.get(activation.provider_id)
+    client = Client.query.get(activation.client_id) if activation.client_id else None
+    
+    total_seconds = (activation.end_time - activation.start_time).total_seconds()
+    total_hours = total_seconds / 3600
+
+    hour_allowance_in_seconds = provider.hour_allowance.hour * 3600 + provider.hour_allowance.minute * 60 + provider.hour_allowance.second
+    excess_hours = max(0, total_hours - hour_allowance_in_seconds / 3600)
+
+    total_km = activation.final_km - activation.initial_km
+    excess_km = max(0, total_km - provider.km_allowance)
+
+    total_value = provider.activation_value + excess_hours * provider.excess_value + excess_km * provider.km_excess_value + activation.toll
+    
+    # Se o cliente existir, calcule os valores para o cliente
+    if client:
+        client_hour_allowance_in_seconds = client.hour_allowance.hour * 3600 + client.hour_allowance.minute * 60 + client.hour_allowance.second
+        client_excess_hours = max(0, total_hours - client_hour_allowance_in_seconds / 3600)
+        client_excess_km = max(0, total_km - client.km_allowance)
+        client_total_value = client.activation_value + client_excess_hours * client.excess_value + client_excess_km * client.km_excess_value + activation.client_toll
+    else:
+        client_excess_hours = client_excess_km = client_total_value = None
+
+    # Formatar os valores para ter no máximo duas casas decimais e a data para o formato dd/mm/yyyy hh:mm
+    total_km = "{:.0f}".format(total_km) if total_km.is_integer() else "{:.2f}".format(total_km)
+    excess_km = "{:.0f}".format(excess_km) if excess_km.is_integer() else "{:.2f}".format(excess_km)
+    client_excess_km_formatted = "{:.0f}".format(client_excess_km) if client_excess_km.is_integer() else "{:.2f}".format(client_excess_km)
+    total_value = "{:.2f}".format(total_value)
+    client_total_value_formatted = "{:.2f}".format(client_total_value)
+    toll = "{:.2f}".format(float(activation.toll))
+    client_toll = "{:.2f}".format(float(activation.client_toll))
+    start_time_formatted = activation.start_time.strftime("%d/%m/%Y %H:%M")
+    end_time_formatted = activation.end_time.strftime("%d/%m/%Y %H:%M")
+    total_hours_formatted = "{:02d}:{:02d}".format(int(float(total_hours)), int((float(total_hours) * 60) % 60))
+    excess_hours_formatted = "{:02d}:{:02d}".format(int(float(excess_hours)), int((float(excess_hours) * 60) % 60))
+    client_excess_hours_formatted = "{:02d}:{:02d}".format(int(float(client_excess_hours)), int((float(client_excess_hours) * 60) % 60))
+
+    return render_template('activation_details.html', activation=activation, provider=provider, client=client, total_km=total_km, excess_km=excess_km, total_value=total_value, start_time_formatted=start_time_formatted, end_time_formatted=end_time_formatted, toll=toll, total_hours_formatted=total_hours_formatted, excess_hours_formatted=excess_hours_formatted, client_excess_hours_formatted=client_excess_hours_formatted, client_excess_km=client_excess_km_formatted, client_total_value_formatted=client_total_value_formatted, client_toll=client_toll)
+
+@app.route('/activations', methods=['GET'])
+@login_required
+@check_permissions(['Acompanhamento'])
+def list_activations():
+    activations = Activation.query.all()
+    clients = Client.query.all()
+    return render_template('activations.html', activations=activations, clients=clients, Client=Client, Provider=Provider)
+
+@app.route('/activation/<int:id>/edit', methods=['GET', 'POST'])
+@login_required
+@check_permissions(['Acompanhamento'])
+def edit_activation(id):
+    activation = Activation.query.get(id)
+    form = ActivationEditForm(obj=activation)
+    form.provider.choices = [(p.id, p.name) for p in Provider.query.all()]
+    form.client.choices = [(c.id, c.name) for c in Client.query.all()]
+
+    if form.validate_on_submit():
+        form.populate_obj(activation)
+        activation.status = 'Completo'
+        activation.provider_id = form.provider.data
+        activation.client_id = form.client.data
+        db.session.commit()
+        flash('Acionamento atualizado com sucesso!', 'success')
+        return redirect(url_for('activation_details', id=id))
+
+    return render_template('edit_activation.html', form=form, activation=activation)
+
+@app.route('/export_activations', methods=['POST'])
+@login_required
+@check_permissions(['Acompanhamento'])
+def export_activations():
+    start_date = request.form.get('start_date')
+    end_date = request.form.get('end_date')
+
+    # Converta as datas para objetos datetime
+    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+    # Obtenha todos os acionamentos no intervalo de datas que têm uma data final
+    activations = Activation.query.filter(Activation.start_time.between(start_date, end_date), Activation.end_time.isnot(None)).all()
+
+    # Crie um novo workbook e uma nova planilha
+    wb = Workbook()
+    ws = wb.active
+
+    # Adicione os cabeçalhos à planilha
+    headers = ['ID', 'Data e Hora Inicial', 'Data e Hora Final', 'Prestador', 'Placas', 'Agentes', 'ID do Equipamento', 'KM Inicial', 'KM Final', 'Pedágio', 'Horas Totais', 'Horas Excedentes', 'KM Total', 'KM Excedente', 'Valor Total', 'Cliente', 'Pedágio Cliente', 'Horas Excedentes Cliente', 'KM Excedente Cliente', 'Valor Total Cliente']
+    ws.append(headers)
+
+    for activation in activations:
+        provider = Provider.query.get(activation.provider_id)
+        client = Client.query.get(activation.client_id) if activation.client_id else None
+
+        # Calcule os valores necessários
+        total_seconds = (activation.end_time - activation.start_time).total_seconds()
+        total_hours = total_seconds / 3600
+        hour_allowance_in_seconds = provider.hour_allowance.hour * 3600 + provider.hour_allowance.minute * 60 + provider.hour_allowance.second
+        excess_hours = max(0, total_hours - hour_allowance_in_seconds / 3600)
+        total_km = activation.final_km - activation.initial_km
+        excess_km = max(0, total_km - provider.km_allowance)
+        total_value = provider.activation_value + excess_hours * provider.excess_value + excess_km * provider.km_excess_value + activation.toll
+
+        # Se o cliente existir, calcule os valores para o cliente
+        if client:
+            client_hour_allowance_in_seconds = client.hour_allowance.hour * 3600 + client.hour_allowance.minute * 60 + client.hour_allowance.second
+            client_excess_hours = max(0, total_hours - client_hour_allowance_in_seconds / 3600)
+            client_excess_km = max(0, total_km - client.km_allowance)
+            client_total_value = client.activation_value + client_excess_hours * client.excess_value + client_excess_km * client.km_excess_value + activation.client_toll
+        else:
+            client_excess_hours = client_excess_km = client_total_value = None
+
+        # Formate os valores para ter no máximo duas casas decimais e a data para o formato dd/mm/yyyy hh:mm
+        total_km = "{:.0f}".format(total_km) if total_km.is_integer() else "{:.2f}".format(total_km)
+        excess_km = "{:.0f}".format(excess_km) if excess_km.is_integer() else "{:.2f}".format(excess_km)
+        client_excess_km_formatted = "{:.0f}".format(client_excess_km) if client_excess_km and client_excess_km.is_integer() else "{:.2f}".format(client_excess_km) if client_excess_km else None
+        total_value = "{:.2f}".format(total_value)
+        client_total_value_formatted = "{:.2f}".format(client_total_value) if client_total_value else None
+        toll = "{:.2f}".format(float(activation.toll))
+        client_toll = "{:.2f}".format(float(activation.client_toll)) if activation.client_toll else None
+        start_time_formatted = activation.start_time.strftime("%d/%m/%Y %H:%M")
+        end_time_formatted = activation.end_time.strftime("%d/%m/%Y %H:%M")
+        total_hours_formatted = "{:02d}:{:02d}".format(int(float(total_hours)), int((float(total_hours) * 60) % 60))
+        excess_hours_formatted = "{:02d}:{:02d}".format(int(float(excess_hours)), int((float(excess_hours) * 60) % 60))
+        client_excess_hours_formatted = "{:02d}:{:02d}".format(int(float(client_excess_hours)), int((float(client_excess_hours) * 60) % 60)) if client_excess_hours else None
+
+        # Adicione os dados à planilha
+        data = [activation.id, start_time_formatted, end_time_formatted, provider.name, activation.plates, activation.agents, activation.equipment_id, activation.initial_km, activation.final_km, toll, total_hours_formatted, excess_hours_formatted, total_km, excess_km, total_value, client.name if client else None, client_toll, client_excess_hours_formatted, client_excess_km_formatted, client_total_value_formatted]
+        ws.append(data)
+
+    # Salve o workbook em um objeto BytesIO
+    excel_data = BytesIO()
+    wb.save(excel_data)
+
+    # Crie uma resposta com o arquivo Excel
+    response = make_response(excel_data.getvalue())
+    response.headers["Content-Disposition"] = "attachment; filename=activations.xlsx"
+    response.headers["Content-Type"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+    return response

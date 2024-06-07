@@ -64,6 +64,7 @@
     {% if request.status in ['Aprovado', 'Aprovado pela diretoria','Pronto para o envio'] %}
     <div class="card" style="background-color: {% if request.status == 'Pronto para o envio' %}lightgreen{% elif request.status in ['Aprovado', 'Aprovado pela diretoria'] %}lightblue{% endif %};">
         <p><b>Cliente:</b> {{ request. client }} | <b>ID: </b> {{request.id}}</p>
+        <p><b>CNPJ:</b> {{ request.cnpj }}</p>
         <p><b>Data:</b> {{ request.date_completed }}</p>
         <p><b>Comercial:</b> {{ request.sales_rep }}</p>
         <p><b>Contrato:</b> {{ request.contract_type }}</p>

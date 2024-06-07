@@ -23,7 +23,7 @@
             <ul class="navbar-nav mr-auto">
                 {% if current_user.is_authenticated %}
                 <!-- Agrupamento de Formulários -->
-                {% if current_user.access_level in ['Admin', 'Manutenção', 'Comercial','Inteligência'] %}
+                {% if current_user.access_level in ['Admin', 'Manutenção', 'Comercial', 'Inteligência', 'Expedição'] %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="formsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Formulários
@@ -45,14 +45,17 @@
                 </li>
                 {% endif %}
                 <!-- Agrupamento Corporativo -->
-                {% if current_user.access_level in ['Admin', 'Diretoria','CEO', 'Inteligência'] %}
+                {% if current_user.access_level in ['Admin', 'Diretoria', 'CEO', 'Inteligência'] %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="corporateDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Corporativo
                     </a>
                     <div class="dropdown-menu" aria-labelledby="corporateDropdown">
-                        {% if current_user.access_level in ['Admin', 'Diretoria', 'Inteligência'] %}
+                        {% if current_user.access_level in ['Admin', 'Diretoria', 'CEO', 'Inteligência'] %}
                         <a class="dropdown-item" href="{{ url_for('direction') }}">Diretoria</a>
+                        {% endif %}
+                        {% if current_user.access_level in ['Admin', 'CEO', 'Diretoria', 'Inteligência'] %}
+                        <a class="dropdown-item" href="{{ url_for('direction_maintenance') }}">Manutenções</a>
                         {% endif %}
                         {% if current_user.access_level in ['Admin', 'CEO', 'Inteligência'] %}
                         <a class="dropdown-item" href="{{ url_for('ceo_approval_requests') }}">CEO</a>
@@ -61,17 +64,17 @@
                 </li>
                 {% endif %}
                 <!-- Agrupamento de Setores -->
-                {% if current_user.access_level in ['Admin', 'Manutenção', 'Comercial', 'Inteligência', 'Expedição', 'Configuração'] %}
+                {% if current_user.access_level in ['Admin', 'Manutenção', 'Comercial', 'Inteligência', 'CEO', 'Diretoria', 'Expedição', 'Configuração'] %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="sectorsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Setores
                     </a>
                     <div class="dropdown-menu" aria-labelledby="sectorsDropdown">
-                        {% if current_user.access_level in ['Admin', 'Manutenção', 'Inteligência'] %}
-                        <a class="dropdown-item" href="{{ url_for('maintenances') }}">Setor de Inteligência</a>
+                        {% if current_user.access_level in ['Admin', 'Manutenção', 'Inteligência', 'Diretoria', 'CEO'] %}
+                        <a class="dropdown-item" href="{{ url_for('maintenances') }}">Manutenções</a>
                         {% endif %}
-                        {% if current_user.access_level in ['Admin', 'Manutenção', 'Inteligência'] %}
-                        <a class="dropdown-item" href="{{ url_for('rejected_maintenances') }}">Setor de Manutenção</a>
+                        {% if current_user.access_level in ['Admin', 'Manutenção', 'Inteligência', 'Diretoria'] %}
+                        <a class="dropdown-item" href="{{ url_for('rejected_maintenances') }}">Manutenções Rejeitadas</a>
                         {% endif %}
                         {% if current_user.access_level in ['Admin', 'Configuração', 'Inteligência'] %}
                         <a class="dropdown-item" href="{{ url_for('configuration') }}">Setor de Configuração</a>
@@ -79,13 +82,13 @@
                         {% if current_user.access_level in ['Admin', 'Expedição', 'Inteligência'] %}
                         <a class="dropdown-item" href="{{ url_for('expedition') }}">Expedição</a>
                         {% endif %}
-                        {% if current_user.access_level in ['Admin', 'Comercial', 'CEO', 'Inteligência'] %}
+                        {% if current_user.access_level in ['Admin', 'Comercial', 'CEO', 'Inteligência', 'Diretoria'] %}
                         <a class="dropdown-item" href="{{ url_for('all_sales_requests') }}">Requisições</a>
                         {% endif %}
-                        {% if current_user.access_level in ['Admin', 'Expedição', 'Manutenção', 'Inteligência'] %}
+                        {% if current_user.access_level in ['Admin', 'Expedição', 'Manutenção', 'Inteligência', 'Diretoria', 'CEO'] %}
                         <a class="dropdown-item" href="{{ url_for('all_entrances') }}">Entradas</a>
                         {% endif %}
-                        {% if current_user.access_level in ['Admin', 'Comercial', 'Inteligência'] %}
+                        {% if current_user.access_level in ['Admin', 'Comercial', 'Inteligência', 'Diretoria', 'CEO'] %}
                         <a class="dropdown-item" href="{{ url_for('reactivations') }}">Reativações</a>
                         {% endif %}
                         <a class="dropdown-item" href="{{ url_for('sales_status') }}">Status</a>
@@ -102,8 +105,32 @@
                         {% if current_user.access_level in ['Admin','Inteligência'] %}
                         <a class="dropdown-item" href="{{ url_for('users') }}">Usuários</a>
                         {% endif %}
-                        {% if current_user.access_level in ['Admin','Inteligência'] %}
+                        {% if current_user.access_level in ['Admin','Inteligência', 'CEO', 'Diretoria'] %}
                         <a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+                        {% endif %}
+                        {% if current_user.access_level in ['Admin','Inteligência'] %}
+                        <a class="dropdown-item" href="{{ url_for('view_stock') }}">Estoque</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endif %}
+                {% if current_user.access_level in ['Acompanhamento'] %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="sectorsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Acompanhamento
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="sectorsDropdown">
+                        {% if current_user.access_level in ['Acompanhamento'] %}
+                        <a class="dropdown-item" href="{{ url_for('activation') }}">Formulário de Acompanhamento</a>
+                        {% endif %}
+                        {% if current_user.access_level in ['Acompanhamento'] %}
+                        <a class="dropdown-item" href="{{ url_for('list_activations') }}">Acompanhamentos</a>
+                        {% endif %}
+                        {% if current_user.access_level in ['Acompanhamento'] %}
+                        <a class="dropdown-item" href="{{ url_for('add_provider') }}">Registro de Prestador</a>
+                        {% endif %}
+                        {% if current_user.access_level in ['Acompanhamento'] %}
+                        <a class="dropdown-item" href="{{ url_for('add_client') }}">Registro de Cliente</a>
                         {% endif %}
                     </div>
                 </li>

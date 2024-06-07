@@ -2,7 +2,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, ValidationError, SelectField, MultipleFileField, IntegerField, BooleanField, FormField, FieldList, Form
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, ValidationError, SelectField, MultipleFileField,IntegerField, BooleanField, FormField, FieldList, Form, DecimalField, DateTimeField, TimeField
 from wtforms.validators import DataRequired, Email, EqualTo, Optional
 
 class RegisterForm(FlaskForm):
@@ -66,7 +66,7 @@ class SalesRequestForm(FlaskForm):
     shipping = SelectField('Envio', choices=[('Agente', 'Agente'), ('Retirada na base', 'Retirada na base'),
                                              ('Motoboy', 'Motoboy'), ('Transportadora', 'Transportadora'),
                                              ('Correio', 'Correio'), ('Comercial', 'Comercial')], validators=[DataRequired()])
-    delivery_fee = StringField('Taxa de Entrega', default='0', validators=[Optional()])
+    delivery_fee = DecimalField('Taxa de Entrega', validators=[Optional()])
     address = StringField('Endereço', validators=[DataRequired()])
     contact_person = StringField('A/C', validators=[DataRequired()])
     email = StringField('E-mail', validators=[Email()])
@@ -91,8 +91,8 @@ class SalesRequestForm(FlaskForm):
     charger = StringField('Carregador', validators=[DataRequired()])
     cable = StringField('Cabo', validators=[DataRequired()])
     invoice_type = SelectField('Tipo de Fatura', choices=[('Com custo', 'Com custo'), ('Sem custo', 'Sem custo')], validators=[DataRequired()])
-    value = StringField('Valor Unitário', validators=[DataRequired()])
-    total_value = StringField('Valor Total', validators=[DataRequired()])
+    value = DecimalField('Valor Unitário', validators=[DataRequired()])
+    total_value = DecimalField('Valor Total', validators=[DataRequired()])
     payment_method = StringField('Forma de Pagamento', validators=[DataRequired()])
     observations = TextAreaField('Observações', validators=[DataRequired()])
     accept_terms = BooleanField('Aceitar os ', validators=[DataRequired()])
@@ -101,13 +101,10 @@ class SalesRequestForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(SalesRequestForm, self).__init__(*args, **kwargs)
         
-        # Definir valor padrão para os novos campos se a opção não for selecionada
         if 'reason' in kwargs and kwargs['reason'] not in ['Manutenção']:
             self.maintenance_number.data = 'N/A'
         if 'reason' in kwargs and kwargs['reason'] not in ['Isca Fast']:
             self.location.data = 'N/A'
-        if 'shipping' in kwargs and kwargs['shipping'] not in ['Motoboy']:
-            self.delivery_fee.data = 'n/a'
 
 class EntranceForm(FlaskForm):
     client = StringField('Cliente', validators=[DataRequired()])
@@ -148,3 +145,41 @@ class ReactivationForm(FlaskForm):
     value = StringField('Valor Unitário', validators=[DataRequired()])
     total_value = StringField('Valor Total', validators=[DataRequired()]) 
     observation = TextAreaField('Observações')
+
+class EquipmentStockForm(FlaskForm):
+    model = SelectField('Modelo', choices=[('GS 410', 'GS 410'), ('GS 4410', 'GS 4410'), ('GS 419', 'GS 419'), ('GS 33', 'GS 33'), ('GS 33 4G', 'GS 33 4G'),
+                                           ('Tetis', 'Tetis'),('GS 480 (Antena)', 'GS 480 (Antena)'),('GS 489 (Antena)', 'GS 489 (Antena)'), ('Ayama (Antena)', 'Ayama (Antena)'), ('Tetis R', 'Tetis R'), ('GS Air', 'GS Air'), ('Lokies', 'Lokies'),
+                                           ('Imobilizador GS340', 'Imobilizador GS340'),('Localizador GS310', 'Localizador GS310'),
+                                           ('Localizador GS390', 'Localizador GS390'), ('Bodycam', 'Bodycam'), ('ESEYE', 'ESEYE'), ('1NCE', '1NCE')], validators=[DataRequired()])
+    quantity_in_stock = IntegerField('Quantidade', validators=[DataRequired()])
+
+class ActivationForm(FlaskForm):
+    start_time = DateTimeField('Data e Hora Inicial', format='%d/%m/%Y %H:%M', validators=[DataRequired()])
+    end_time = DateTimeField('Data e Hora Final', format='%d/%m/%Y %H:%M', validators=[Optional()])
+    provider = SelectField('Prestador', coerce=int)
+    plates = StringField('Placas', validators=[DataRequired()])
+    agents = StringField('Agentes', validators=[DataRequired()])
+    equipment_id = StringField('ID do Equipamento', validators=[Optional()])
+    initial_km = IntegerField('KM Inicial', validators=[DataRequired()])
+    final_km = IntegerField('KM Final', validators=[Optional()])
+    toll = DecimalField('Pedágio', validators=[Optional()])
+    
+class ProviderForm(FlaskForm):
+    name = StringField('Nome', validators=[DataRequired()])
+    km_allowance = IntegerField('Franquia de KM', validators=[DataRequired()])
+    hour_allowance = TimeField('Franquia de Hora', validators=[DataRequired()])
+    activation_value = DecimalField('Valor do Acionamento', validators=[DataRequired()])
+    km_excess_value = DecimalField('Valor KM Excedente', validators=[DataRequired()])
+    excess_value = DecimalField('Valor Excedente', validators=[DataRequired()])
+    
+class ClientForm(FlaskForm):
+    name = StringField('Nome', validators=[DataRequired()])
+    km_allowance = IntegerField('Franquia de KM', validators=[DataRequired()])
+    hour_allowance = TimeField('Franquia de Hora', validators=[DataRequired()])
+    activation_value = DecimalField('Valor do Acionamento', validators=[DataRequired()])
+    km_excess_value = DecimalField('Valor KM Excedente', validators=[DataRequired()])
+    excess_value = DecimalField('Valor Excedente', validators=[DataRequired()])
+    
+class ActivationEditForm(ActivationForm):
+    client = SelectField('Cliente', coerce=int, validators=[DataRequired()])
+    client_toll = DecimalField('Pedágio Cliente', validators=[DataRequired()])

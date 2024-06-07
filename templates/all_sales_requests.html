@@ -112,9 +112,12 @@ label{
             <p><b>Observações:</b> {{ request.observations }}</p>
 
             <!-- Botão para download de PDF -->
-            <a href="{{ url_for('download_sales_pdf', sales_request_id=request.id) }}" class="btn btn-primary" id="button1" >Download PDF</a>
+            <a href="{{ url_for('download_sales_pdf', sales_request_id=request.id) }}" class="btn btn-primary" id="button1" >PDF de Venda</a>
             {% if current_user.access_level in ['Admin','Inteligência'] %}
-            <a href="{{ url_for('edit_sales_request', sales_request_id=request.id) }}" class="btn btn-danger">Editar</a>
+            <a href="{{ url_for('edit_sales_request', sales_request_id=request.id) }}" class="btn btn-danger" id="button1">Editar</a>
+            {% endif %}
+            {% if request.status in ['Enviado para a expedição','Pedido enviado ao cliente'] and current_user.access_level in ['Admin', 'Inteligência'] %}
+            <a href="{{ url_for('download_pdf', sales_request_id=request.id) }}" class="btn btn-primary">PDF de Saída</a>
             {% endif %}
         </div>
     {% endfor %}
