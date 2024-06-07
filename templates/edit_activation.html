@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Editar Acionamento</div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.start_time.label }} {{ form.start_time(class="form-control") }}
+                        {% if form.start_time.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.start_time.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.end_time.label }} {{ form.end_time(class="form-control") }}
+                        {% if form.end_time.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.end_time.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.provider.label }} {{ form.provider(class="form-control") }}
+                        {% if form.provider.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.provider.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.plates.label }} {{ form.plates(class="form-control") }}
+                        {% if form.plates.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.plates.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.agents.label }} {{ form.agents(class="form-control") }}
+                        {% if form.agents.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.agents.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.equipment_id.label }} {{ form.equipment_id(class="form-control") }}
+                        {% if form.equipment_id.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.equipment_id.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.initial_km.label }} {{ form.initial_km(class="form-control") }}
+                        {% if form.initial_km.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.initial_km.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.final_km.label }} {{ form.final_km(class="form-control") }}
+                        {% if form.final_km.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.final_km.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.toll.label }} {{ form.toll(class="form-control") }}
+                        {% if form.toll.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.toll.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.client.label }} {{ form.client(class="form-control") }}
+                        {% if form.client.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.client.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.client_toll.label }} {{ form.client_toll(class="form-control") }}
+                        {% if form.client_toll.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.client_toll.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                </form>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        // Substitua 'provider' e 'client' pelos IDs reais dos seus campos select
+        var providerSelect = document.getElementById('provider');
+        var clientSelect = document.getElementById('client');
+    
+        // Substitua 'provider_id' e 'client_id' pelos IDs atuais do prestador e do cliente
+        var providerId = '{{ activation.provider_id }}';
+        var clientId = '{{ activation.client_id }}';
+    
+        // Defina o valor selecionado dos campos select para o valor atual
+        providerSelect.value = providerId;
+        clientSelect.value = clientId;
+    };
+    </script>
+{% endblock %}

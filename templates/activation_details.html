@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Informações do Acionamento</h2>
+                    <p><strong>Data e Hora Inicial:</strong> {{ start_time_formatted }}</p>
+                    <p><strong>Data e Hora Final:</strong> {{ end_time_formatted }}</p>
+                    <p><strong>Horas Totais:</strong> {{ total_hours_formatted }}</p>
+                    <p><strong>Prestador:</strong> {{ provider.name }}</p>
+                    <p><strong>Cliente: </strong> {{ client.name }}</p>
+                    <p><strong>Placas:</strong> {{ activation.plates }}</p>
+                    <p><strong>Agentes:</strong> {{ activation.agents }}</p>
+                    <p><strong>ID do Equipamento:</strong> {{ activation.equipment_id }}</p>
+                    <p><strong>KM Inicial:</strong> {{ activation.initial_km }}</p>
+                    <p><strong>KM Final:</strong> {{ activation.final_km }}</p>
+                    <p><strong>KM Total:</strong> {{ total_km }}</p>
+                    <hr>
+                    <h2 class="card-title text-center mb-4">Resumo do Prestador</h2>
+                    <p><strong>Horas Excedentes:</strong> {{ excess_hours_formatted }}</p>
+                    <p><strong>KM Excedente:</strong> {{ excess_km }}</p>
+                    <p><strong>Pedágio:</strong> R$ {{ toll }}</p>
+                    <p><strong>Valor Total:</strong> R$ {{ total_value }}</p>
+                    <hr>
+                    <h2 class="card-title text-center mb-4">Resumo do Cliente</h2>
+                    <p><strong>Horas Excedentes:</strong> {{ client_excess_hours_formatted }}</p>
+                    <p><strong>KM Excedente:</strong> {{ client_excess_km }}</p>
+                    <p><strong>Pedágio:</strong> R$ {{ client_toll }}</p>
+                    <p><strong>Valor Total:</strong> R$ {{ client_total_value_formatted }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

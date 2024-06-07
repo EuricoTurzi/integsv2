@@ -1,0 +1,85 @@
+<!-- stock_management.html -->
+{% extends 'base.html' %}
+
+{% block title %}Gerenciamento de Estoque{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="card my-3">
+        <div class="card-header">Adicionar Equipamentos ao Estoque</div>
+        <div class="card-body">
+            <form action="{{ url_for('add_to_stock') }}" method="post">
+                {{ form_entry.csrf_token }}
+                <div class="form-row">
+                    {{ form_entry.model.label(class="col-sm-2 col-form-label") }}
+                    <div class="col-sm-10">
+                        {{ form_entry.model(class="form-control", id="entry-model") }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    {{ form_entry.quantity_in_stock.label(class="col-sm-2 col-form-label") }}
+                    <div class="col-sm-10">
+                        {{ form_entry.quantity_in_stock(class="form-control", id="entry-quantity") }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-12 text-right">
+                        <button type="submit" class="btn btn-primary mt-3">Adicionar ao Estoque</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Formulário de Saída de Equipamentos -->
+    <div class="card my-3">
+        <div class="card-header">Retirar Equipamentos do Estoque</div>
+        <div class="card-body">
+            <form action="{{ url_for('withdraw_from_stock') }}" method="post">
+                {{ form_withdrawal.csrf_token }}
+                <div class="form-row">
+                    {{ form_withdrawal.model.label(class="col-sm-2 col-form-label") }}
+                    <div class="col-sm-10">
+                        {{ form_withdrawal.model(class="form-control", id="withdrawal-model") }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    {{ form_withdrawal.quantity_in_stock.label(class="col-sm-2 col-form-label") }}
+                    <div class="col-sm-10">
+                        {{ form_withdrawal.quantity_in_stock(class="form-control", id="withdrawal-quantity") }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-12 text-right">
+                        <button type="submit" class="btn btn-danger mt-3">Retirar do Estoque</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabela de Equipamentos em Estoque -->
+    <div class="card my-3">
+        <div class="card-header">Equipamentos em Estoque</div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Modelo</th>
+                        <th>Quantidade em Estoque</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for equipment in equipment_stock %}
+                    <tr>
+                        <td>{{ equipment.model }}</td>
+                        <td>{{ equipment.quantity_in_stock }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

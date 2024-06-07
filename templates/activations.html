@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+    justify-content: flex-start;
+    margin-left: 25px;
+}
+
+.card {
+    width: 350px;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+    line-height: 1;
+    color: black;
+}
+
+.card form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+    }
+
+.card form button {
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    width: 100%;
+    position: relative;
+}
+
+.container {
+    color: white;
+}
+
+
+@media (max-width: 768px) {
+    .card {
+        width: 375px;
+    }
+}
+
+</style>
+
+<div class="container form-container">
+    <form method="POST" action="{{ url_for('export_activations') }}">
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="start_date">Data de início:</label>
+                <input type="date" id="start_date" name="start_date" class="form-control" required>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="end_date">Data final:</label>
+                <input type="date" id="end_date" name="end_date" class="form-control" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Exportar para Excel</button>
+    </form>
+</div>
+
+<div class="card-container" id="card-container">
+        {% for activation in activations %}
+        {% set provider = Provider.query.get(activation.provider_id) %}
+        {% set client = Client.query.get(activation.client_id) if activation.client_id else None %}
+        <div class="card">
+            <p><b>Acionamento</b> {{ activation.id }}</p>
+            <p><b>Prestador:</b> {{ provider.name }}</p>
+            {% if client %}
+            <p><b>Cliente:</b> {{ client.name }}</p>
+            {% endif %}
+            <p><b>Data e Hora Inicial:</b> {{ activation.start_time.strftime("%d/%m/%Y %H:%M") }}</p>
+            <p><b>Data e Hora Final:</b> {% if activation.end_time %}{{ activation.end_time.strftime("%d/%m/%Y %H:%M") }}{% endif %}</p>
+            <p><b>KM Inicial:</b> {{ activation.initial_km }}</p>
+            <p><b>KM Final:</b> {{ activation.final_km }}</p>
+            <p><b>Status:</b> {{ activation.status }}</p>
+            <form action="{{ url_for('activation_details', id=activation.id) }}" method="get" style="display: inline">
+                <button type="submit" class="btn btn-primary" {% if activation.status != 'Completo' %}disabled{% endif %}>Detalhes</button>
+            </form>
+            <form action="{{ url_for('edit_activation', id=activation.id) }}" method="get" style="display: inline">
+                <button type="submit" class="btn btn-success">Editar</button>
+            </form>
+        </div>
+        {% endfor %}
+</div>
+
+{% endblock %}

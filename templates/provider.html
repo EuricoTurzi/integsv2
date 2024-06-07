@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body{
+        overflow-x: hidden;
+    }
+    .card{
+        width: 750px;
+        box-sizing: border-box;
+        margin: 0px auto;
+        margin-bottom: 25px;
+        padding: 5px;
+    }
+    ::-webkit-scrollbar {
+        display: none;
+    }
+    
+    @media (max-width: 768px) {
+        .card {
+            width: 400px;
+        }
+    }
+    </style>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Registro do Prestador</div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.name.label }} {{ form.name(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.km_allowance.label }} {{ form.km_allowance(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.hour_allowance.label }} {{ form.hour_allowance(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.activation_value.label }} {{ form.activation_value(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.km_excess_value.label }} {{ form.km_excess_value(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.excess_value.label }} {{ form.excess_value(class="form-control") }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                </form>
+            </div> 
+        </div>
+    </div>
+</div>
+{% endblock %}
