@@ -25,12 +25,11 @@ InteGS é um sistema de gerenciamento integrado desenvolvido em Flask. Ele ofere
 Para criar uma nova conta de administrador, siga os passos abaixo:
 
 1. Acesse a parte de registro e crie um novo usuário.
-2. Vá para o banco de dados 'site.db' e abra a tabela 'users'.
-3. Localize o usuário que você acabou de criar e altere o 'access_level' para 'Admin'.
+2. Execute o comando `flask promote_to_admin` no terminal. Quando solicitado, insira o e-mail do usuário que deseja promover a administrador.
 
 Agora, este usuário tem permissões de administrador e pode acessar todas as funcionalidades do sistema.
 
-**Nota**: _Este processo atual requer acesso direto ao banco de dados e deve ser realizado por um usuário com conhecimentos de SQL. Estamos trabalhando para tornar esse processo mais fácil no futuro._
+**Nota**: _Este processo requer acesso ao terminal do servidor onde o aplicativo está sendo executado. Portanto, deve ser realizado por um usuário com permissões adequadas no servidor._
 
 ## Contribuição
 
