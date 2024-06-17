@@ -69,9 +69,10 @@
 
 <div class="card-container" id="card-container">
         {% for activation in activations %}
+        {% if activation.status in ['Pendente', 'Completo', 'Enviado ao Faturamento', 'Faturado'] %}
         {% set provider = Provider.query.get(activation.provider_id) %}
         {% set client = Client.query.get(activation.client_id) if activation.client_id else None %}
-        <div class="card">
+        <div class="card" style="background-color: {% if activation.status == 'Pendente' %}lightyellow{% elif activation.status == 'Completo' %}lightblue{% elif activation.status == 'Enviado ao Faturamento' %}lightgreen{% endif %};">
             <p><b>Acionamento</b> {{ activation.id }}</p>
             <p><b>Prestador:</b> {{ provider.name }}</p>
             {% if client %}
@@ -83,13 +84,61 @@
             <p><b>KM Final:</b> {{ activation.final_km }}</p>
             <p><b>Status:</b> {{ activation.status }}</p>
             <form action="{{ url_for('activation_details', id=activation.id) }}" method="get" style="display: inline">
-                <button type="submit" class="btn btn-primary" {% if activation.status != 'Completo' %}disabled{% endif %}>Detalhes</button>
+                <button type="submit" class="btn btn-primary" {% if activation.status not in ['Completo', 'Enviado ao Faturamento', 'Faturado'] %}disabled{% endif %}>Detalhes</button>
             </form>
+            {% if activation.status == 'Pendente' %}
             <form action="{{ url_for('edit_activation', id=activation.id) }}" method="get" style="display: inline">
                 <button type="submit" class="btn btn-success">Editar</button>
             </form>
+            {% elif activation.status == 'Completo' %}
+                {% if current_user.access_level in ['Admin', 'Inteligência', 'Supervisor'] %}
+            <form action="{{ url_for('send_to_billing', id=activation.id) }}" method="post" style="display: inline">
+                <button type="submit" class="btn btn-warning">Enviar ao Faturamento</button>
+            </form>
+                {% endif %}
+            {% endif %}
         </div>
+        {% endif %}
         {% endfor %}
+        <footer class="footer">
+            <div class="container">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if activations.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('list_activations', page=activations.prev_num) }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Anterior</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                            </li>
+                        {% endif %}
+        
+                        {% for page_num in range(1, activations.pages + 1) %}
+                        <li class="page-item {% if page_num == activations.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('list_activations', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% endfor %}
+        
+                    {% if activations.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('list_activations', page=activations.next_num) }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Próximo</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a>
+                        </li>
+                    {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </footer>
 </div>
 
 {% endblock %}

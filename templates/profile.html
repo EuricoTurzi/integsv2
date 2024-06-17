@@ -25,11 +25,6 @@
                 {% if current_user.access_level in ['Admin','Inteligência', 'Comercial'] %}
                 <p><strong>Requisições realizadas:</strong> {{ num_sales_requests }}</p>
                 {% endif %}
-                <div class="mt-4">
-                    <h5><i class="fas fa-bell"></i> Notificações</h5>
-                    <p>Você tem <strong>{{ current_user.unread_notifications }}</strong> notificações não lidas.</p>
-                    <!-- Adicione um ícone de sino ou outro elemento visual aqui -->
-                </div>
                 <a href="{{ url_for('edit_profile') }}" class="btn btn-primary mt-3">
                     <i class="fas fa-pencil-alt"></i> Editar Perfil
                 </a>

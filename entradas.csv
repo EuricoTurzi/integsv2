@@ -1,44 +1,44 @@
-id,date,client,entrance_type,model,customization,type_of_receipt,recipients_name,withdrawn_by,equipment_numbers,status,accept_terms
-1,17/05/2024 10:33,BENDINI ,Manutenção,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,109792448;109858821;109801204;109763430,Manutenção realizada,1
-2,17/05/2024 13:34,UNIXLOG,Manutenção,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,109847364,Manutenção realizada,1
-3,17/05/2024 16:03,FAST SHOP - CAJAMAR ,Manutenção,GS 410,Caixa de som,Retirado no cliente,N/A,ALEX ,109882834;109821212;109862805;109823266;,Manutenção realizada,1
-4,17/05/2024 16:06,FAST SHOP - CAJAMAR ,Manutenção,GS 410,Projetor,Retirado no cliente,N/A,ALEX,109822316,Manutenção realizada,1
-5,17/05/2024 16:07,FAST SHOP - CAJAMAR ,Manutenção,GS 410,Luminária,Retirado no cliente,N/A,ALEX ,109823706,Manutenção realizada,1
-6,17/05/2024 16:22,PHOENIX LOGISTICA EXPRESS TRANSPOTES ,Devolução/Estoque,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,109765747;109766256,Manutenção realizada,1
-7,17/05/2024 16:28,LUXAFIT TRANSPORTES ,Manutenção,GS 410,Termo branco + imã,Entregue na base,MANUEL ,N/A,007692871;007693578;007660878;109816247,Manutenção realizada,1
-8,20/05/2024 11:10,trd,Manutenção,GS 419,Termo branco,Entregue na base,GILSON,N/A,807135872,Manutenção realizada,1
-9,20/05/2024 16:01,BONFIM CARGAS ,Devolução/Estoque,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,109881264,Manutenção realizada,1
-10,20/05/2024 16:25,FW TRANSP. ,Manutenção,GS 410,Termo branco + imã,Entregue na base,EDILSON ,N/A,109859266,Manutenção realizada,1
-11,21/05/2024 10:35,AVALON CARGO,Devolução/Estoque,GS 419,Termo branco + imã,Correios/Transportadora,N/A,N/A,;807136193,Manutenção realizada,1
-12,21/05/2024 10:36,AVALON CARGO,Devolução/Estoque,GS 419,Termo branco,Correios/Transportadora,N/A,N/A,807126287,Manutenção realizada,1
-13,21/05/2024 10:49,FAST SHOP - SALVADOR  - ANTONIEQUE ,Manutenção,GS 410,Luminária,Correios/Transportadora,N/A,N/A,109822177,Manutenção realizada,1
-14,21/05/2024 10:52,FAST SHOP - SALVADOR  - ANTONIEQUE ,Manutenção,GS 410,Caixa de som,Correios/Transportadora,N/A,N/A,109744188,Pendente,1
-15,21/05/2024 10:55,FAST SHOP - SALVADOR  - ANTONIEQUE ,Manutenção,GS 410,Alexa,Correios/Transportadora,N/A,N/A,109872544;109872451,Pendente,1
-16,21/05/2024 10:57,FAST SHOP - SALVADOR  - ANTONIEQUE ,Manutenção,GS 410,Projetor,Correios/Transportadora,N/A,N/A,109796957,Pendente,1
-17,22/05/2024 09:21,SANTOS TRANSPORTES,Manutenção,GS 410,Termo preto + imã,Retirado no cliente,N/A,ALISON ,109789103,Pendente,1
-18,22/05/2024 16:17,PRYSMIAN - POÇOS DE CALDAS,Manutenção,GS 419,Termo branco,Correios/Transportadora,N/A,N/A,511594970;511560181;511594594,Pendente,1
-19,23/05/2024 10:17,ABC CARGAS ,Manutenção,GS 410,Termo preto + imã,Retirado no cliente,N/A,DANIEL IUGA,511542466;109800862;109813762;109765808;007682267;109765484;109823288;511489912;109762775;109765984;511693560;109846155;109797631;511396057;807136432;511395617,Pendente,1
-20,23/05/2024 15:15,VS TRANSPORTES ,Manutenção,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,109841266;109863797,Pendente,1
-21,23/05/2024 15:15,VS TRANSPORTES ,Manutenção,GS 410,Termo preto + imã,Correios/Transportadora,N/A,N/A,10834087,Pendente,1
-22,24/05/2024 10:49,MARAJA TRANSPORTES,Devolução/Estoque,GS 410,Termo branco slim,Correios/Transportadora,N/A,N/A,109782535,Pendente,1
-23,24/05/2024 10:50,MARAJA TRANSPORTES,Devolução/Estoque,GS 419,Termo branco,Correios/Transportadora,N/A,N/A,511851360,Pendente,1
-24,24/05/2024 13:38,METTA BRASIL ,Manutenção,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,109738756;109769052;109752900,Pendente,1
-25,24/05/2024 13:41,METTA BRASIL ,Manutenção,GS 419,Termo branco,Correios/Transportadora,N/A,N/A,007798860;511192509;007798844,Pendente,1
-26,24/05/2024 13:50,JADLOG,Manutenção,GS 410,Termo branco,Retirado no cliente,N/A,ALEX ,109829683;109822950;109796340;109873405;109834517;109873813;19873838,Manutenção realizada,1
-27,24/05/2024 13:51,JADLOG,Manutenção,GS 419,Termo branco,Retirado no cliente,N/A,ALEX ,511625919;511693226;511683221;511626194;511625837;511592273,Pendente,1
-28,27/05/2024 08:04,ALAMO,Manutenção,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,007649972,Pendente,1
-29,27/05/2024 08:09,FAST SHOP - CONTAGEM - MG,Manutenção,GS 410,Caixa de som,Correios/Transportadora,N/A,N/A,109823238,Pendente,1
-30,27/05/2024 08:22,APPLE - ,Devolução/Estoque,GS 410,Termo branco slim + D.F + ETQ,Correios/Transportadora,N/A,N/A,109788935;109777576,Pendente,1
-31,27/05/2024 14:34,JKM - ITAJAI,Manutenção,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,109840493;109834292,Pendente,1
-33,28/05/2024 17:28,AUTOPORT ,Manutenção,GS 419,Termo preto + imã,Retirado no cliente,N/A,GUILHERME ,807296784;807271100;807270870;;807270243;807270957;807283202;807270257;807270833;807297589;;807270179;,Pendente,1
-34,29/05/2024 09:44,GFL - JUNDIAI ,Manutenção,GS 410,Tênis/sapato,Retirado no cliente,N/A,MARCIO ,109781637,Pendente,1
-35,29/05/2024 09:46,GFL - JUNDIAI ,Manutenção,GS 410,Termo branco,Retirado no cliente,N/A,MARCIO,109775542;109782152;109780777,Pendente,1
-36,29/05/2024 09:46,GFL - JUNDIAI ,Manutenção,GS 419,Termo branco,Retirado no cliente,N/A,MARCIO,511542105,Pendente,1
-37,29/05/2024 10:02,SANTA CRUZ - OSASCO,Manutenção,GS 410,Caixa de papelão,Retirado no cliente,N/A,MOTOBOY EMERSON,109745480;109754436;109754436;109718642;109724863;109723708;10971134;109744954;007695454;109754125;109744368;109722304;109754380;00769545,Pendente,1
-38,31/05/2024 10:34,TRANSP. NEXUS,Manutenção,GS 410,Termo branco + imã,Entregue na base,JOSELITO,N/A,007613035;007651220,Pendente,1
-39,31/05/2024 14:52,ESTRELA TRANSP. ,Manutenção,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,007675940,Pendente,1
-40,31/05/2024 15:54,RODOXICO ,Devolução/Estoque,GS 419,Termo branco + imã,Correios/Transportadora,N/A,N/A,511560347;511560332;511560429;511560764;,Pendente,1
-41,31/05/2024 15:56,RODOXICO ,Devolução/Estoque,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,007613680,Pendente,1
-42,31/05/2024 15:59,RODOXICO ,Devolução/Estoque,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,007631486;007631453;007631598;007632807,Pendente,1
-43,03/06/2024 13:13,VELOSO GREEN COFFE ,Manutenção,Tetis,Caixa de papelão,Correios/Transportadora,N/A,N/A,769686,Pendente,1
-44,03/06/2024 13:40,EDUAL OPERADOR LOGISTICO ( DI CAPRIO ) ,Devolução/Estoque,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,109851945,Pendente,1
+﻿id,date,client,entrance_type,model,customization,type_of_receipt,recipients_name,withdrawn_by,equipment_numbers,accept_terms,maintenance_status,returned_equipment_numbers
+1,17/05/2024 10:33,BENDINI ,Manutenção,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,109792448;109858821;109801204;109763430,1,,
+2,17/05/2024 13:34,UNIXLOG,Manutenção,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,109847364,1,,
+3,17/05/2024 16:03,FAST SHOP - CAJAMAR ,Manutenção,GS 410,Caixa de som,Retirado no cliente,N/A,ALEX ,109882834;109821212;109862805;109823266;,1,,
+4,17/05/2024 16:06,FAST SHOP - CAJAMAR ,Manutenção,GS 410,Projetor,Retirado no cliente,N/A,ALEX,109822316,1,,
+5,17/05/2024 16:07,FAST SHOP - CAJAMAR ,Manutenção,GS 410,Luminária,Retirado no cliente,N/A,ALEX ,109823706,1,,
+6,17/05/2024 16:22,PHOENIX LOGISTICA EXPRESS TRANSPOTES ,Devolução/Estoque,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,109765747;109766256,1,,
+7,17/05/2024 16:28,LUXAFIT TRANSPORTES ,Manutenção,GS 410,Termo branco + imã,Entregue na base,MANUEL ,N/A,007692871;007693578;007660878;109816247,1,,
+8,20/05/2024 11:10,trd,Manutenção,GS 419,Termo branco,Entregue na base,GILSON,N/A,807135872,1,,
+9,20/05/2024 16:01,BONFIM CARGAS ,Devolução/Estoque,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,109881264,1,,
+10,20/05/2024 16:25,FW TRANSP. ,Manutenção,GS 410,Termo branco + imã,Entregue na base,EDILSON ,N/A,109859266,1,,
+11,21/05/2024 10:35,AVALON CARGO,Devolução/Estoque,GS 419,Termo branco + imã,Correios/Transportadora,N/A,N/A,;807136193,1,,
+12,21/05/2024 10:36,AVALON CARGO,Devolução/Estoque,GS 419,Termo branco,Correios/Transportadora,N/A,N/A,807126287,1,,
+13,21/05/2024 10:49,FAST SHOP - SALVADOR  - ANTONIEQUE ,Manutenção,GS 410,Luminária,Correios/Transportadora,N/A,N/A,109822177,1,,
+14,21/05/2024 10:52,FAST SHOP - SALVADOR  - ANTONIEQUE ,Manutenção,GS 410,Caixa de som,Correios/Transportadora,N/A,N/A,109744188,1,,
+15,21/05/2024 10:55,FAST SHOP - SALVADOR  - ANTONIEQUE ,Manutenção,GS 410,Alexa,Correios/Transportadora,N/A,N/A,109872544;109872451,1,,
+16,21/05/2024 10:57,FAST SHOP - SALVADOR  - ANTONIEQUE ,Manutenção,GS 410,Projetor,Correios/Transportadora,N/A,N/A,109796957,1,,
+17,22/05/2024 09:21,SANTOS TRANSPORTES,Manutenção,GS 410,Termo preto + imã,Retirado no cliente,N/A,ALISON ,109789103,1,,
+18,22/05/2024 16:17,PRYSMIAN - POÇOS DE CALDAS,Manutenção,GS 419,Termo branco,Correios/Transportadora,N/A,N/A,511594970;511560181;511594594,1,,
+19,23/05/2024 10:17,ABC CARGAS ,Manutenção,GS 410,Termo preto + imã,Retirado no cliente,N/A,DANIEL IUGA,511542466;109800862;109813762;109765808;007682267;109765484;109823288;511489912;109762775;109765984;511693560;109846155;109797631;511396057;807136432;511395617,1,,
+20,23/05/2024 15:15,VS TRANSPORTES ,Manutenção,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,109841266;109863797,1,,
+21,23/05/2024 15:15,VS TRANSPORTES ,Manutenção,GS 410,Termo preto + imã,Correios/Transportadora,N/A,N/A,10834087,1,,
+22,24/05/2024 10:49,MARAJA TRANSPORTES,Devolução/Estoque,GS 410,Termo branco slim,Correios/Transportadora,N/A,N/A,109782535,1,,
+23,24/05/2024 10:50,MARAJA TRANSPORTES,Devolução/Estoque,GS 419,Termo branco,Correios/Transportadora,N/A,N/A,511851360,1,,
+24,24/05/2024 13:38,METTA BRASIL ,Manutenção,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,109738756;109769052;109752900,1,,
+25,24/05/2024 13:41,METTA BRASIL ,Manutenção,GS 419,Termo branco,Correios/Transportadora,N/A,N/A,007798860;511192509;007798844,1,,
+26,24/05/2024 13:50,JADLOG,Manutenção,GS 410,Termo branco,Retirado no cliente,N/A,ALEX ,109829683;109822950;109796340;109873405;109834517;109873813;19873838,1,,
+27,24/05/2024 13:51,JADLOG,Manutenção,GS 419,Termo branco,Retirado no cliente,N/A,ALEX ,511625919;511693226;511683221;511626194;511625837;511592273,1,,
+28,27/05/2024 08:04,ALAMO,Manutenção,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,007649972,1,,
+29,27/05/2024 08:09,FAST SHOP - CONTAGEM - MG,Manutenção,GS 410,Caixa de som,Correios/Transportadora,N/A,N/A,109823238,1,,
+30,27/05/2024 08:22,APPLE - ,Devolução/Estoque,GS 410,Termo branco slim + D.F + ETQ,Correios/Transportadora,N/A,N/A,109788935;109777576,1,,
+31,27/05/2024 14:34,JKM - ITAJAI,Manutenção,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,109840493;109834292,1,,
+33,28/05/2024 17:28,AUTOPORT ,Manutenção,GS 419,Termo preto + imã,Retirado no cliente,N/A,GUILHERME ,807296784;807271100;807270870;;807270243;807270957;807283202;807270257;807270833;807297589;;807270179;,1,,
+34,29/05/2024 09:44,GFL - JUNDIAI ,Manutenção,GS 410,Tênis/sapato,Retirado no cliente,N/A,MARCIO ,109781637,1,,
+35,29/05/2024 09:46,GFL - JUNDIAI ,Manutenção,GS 410,Termo branco,Retirado no cliente,N/A,MARCIO,109775542;109782152;109780777,1,,
+36,29/05/2024 09:46,GFL - JUNDIAI ,Manutenção,GS 419,Termo branco,Retirado no cliente,N/A,MARCIO,511542105,1,,
+37,29/05/2024 10:02,SANTA CRUZ - OSASCO,Manutenção,GS 410,Caixa de papelão,Retirado no cliente,N/A,MOTOBOY EMERSON,109745480;109754436;109754436;109718642;109724863;109723708;10971134;109744954;007695454;109754125;109744368;109722304;109754380;00769545,1,,
+38,31/05/2024 10:34,TRANSP. NEXUS,Manutenção,GS 410,Termo branco + imã,Entregue na base,JOSELITO,N/A,007613035;007651220,1,,
+39,31/05/2024 14:52,ESTRELA TRANSP. ,Manutenção,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,007675940,1,,
+40,31/05/2024 15:54,RODOXICO ,Devolução/Estoque,GS 419,Termo branco + imã,Correios/Transportadora,N/A,N/A,511560347;511560332;511560429;511560764;,1,,
+41,31/05/2024 15:56,RODOXICO ,Devolução/Estoque,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,007613680,1,,
+42,31/05/2024 15:59,RODOXICO ,Devolução/Estoque,GS 410,Termo branco,Correios/Transportadora,N/A,N/A,007631486;007631453;007631598;007632807,1,,
+43,03/06/2024 13:13,VELOSO GREEN COFFE ,Manutenção,Tetis,Caixa de papelão,Correios/Transportadora,N/A,N/A,769686,1,,
+44,03/06/2024 13:40,EDUAL OPERADOR LOGISTICO ( DI CAPRIO ) ,Devolução/Estoque,GS 410,Termo branco + imã,Correios/Transportadora,N/A,N/A,109851945,1,,

@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card my-3">
+        <div class="card-header bg-primary text-white">Resumo Financeiro</div>
+        <div class="card-body">
+            <!-- Formulário de filtro -->
+            <form method="POST" action="{{ url_for('financial') }}" class="mb-3">
+                <div class="form-row">
+                    <div class="col">
+                        <input type="date" name="start_date" class="form-control" placeholder="Data inicial">
+                    </div>
+                    <div class="col">
+                        <input type="date" name="end_date" class="form-control" placeholder="Data final">
+                    </div>
+                    <div class="col">
+                        <select name="status" class="form-control">
+                            <option value="">Todos os status</option>
+                            <option value="Enviado ao Faturamento">Enviado ao Faturamento</option>
+                            <option value="Faturado">Faturado</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-secondary">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Tabela -->
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped" style="font-size: 0.8rem;">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID do Acionamento</th>
+                            <th>Data e Hora Inicial</th>
+                            <th>Data e Hora Final</th>
+                            <th>Horas Totais</th>
+                            <th>KM Inicial</th>
+                            <th>KM Final</th>
+                            <th>KM Total</th>
+                            <th>Status</th>
+                            <th>Prestador</th>
+                            <th>H.E. Prestador</th>
+                            <th>KM E Prestador</th>
+                            <th>Pedágio Prestador</th>
+                            <th>Valor Total Prestador</th>
+                            <th>Cliente</th>
+                            <th>H.E. Cliente</th>
+                            <th>KM E. Cliente</th>
+                            <th>Pedágio Cliente</th>
+                            <th>Valor Total Cliente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activation in activations %}
+                        {% set provider = Provider.query.get(activation.provider_id) %}
+                        {% if activation.status in ['Enviado ao Faturamento', 'Faturado'] %}
+                        {% set client = Client.query.get(activation.client_id) if activation.client_id else None %}
+                        <tr>
+                            <td>{{ activation.id }}</td>
+                            <td>{{ activation.start_time_formatted }}</td>
+                            <td>{{ activation.end_time_formatted }}</td>
+                            <td>{{ activation.total_hours_formatted }}</td>
+                            <td>{{ activation.initial_km }}</td>
+                            <td>{{ activation.final_km }}</td>
+                            <td>{{ activation.total_km }}</td>
+                            <td>{{ activation.status }}</td>
+                            <td>{{ provider.name }}</td>
+                            <td>{{ activation.excess_hours_formatted }}</td>
+                            <td>{{ activation.excess_km }}</td>
+                            <td>{{ activation.toll }}</td>
+                            <td>{{ activation.total_value }}</td>
+                            <td>{{ client.name if client else 'N/A' }}</td>
+                            <td>{{ activation.client_excess_hours_formatted }}</td>
+                            <td>{{ activation.client_excess_km_formatted }}</td>
+                            <td>{{ activation.client_toll }}</td>
+                            <td>{{ activation.client_total_value_formatted }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('update_status', activation_id=activation.id) }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Faturado</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

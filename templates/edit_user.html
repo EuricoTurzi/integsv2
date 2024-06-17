@@ -44,6 +44,8 @@
                             <option value="Comercial" {% if user.access_level == 'Comercial' %}selected{% endif %}>Setor Comercial</option>
                             <option value="Configuração" {% if user.access_level == 'Configuração' %}selected{% endif %}>Setor de Configuração</option>
                             <option value="Expedição" {% if user.access_level == 'Expedição' %}selected{% endif %}>Setor de Expedição</option>
+                            <option value="Acompanhamento" {% if user.access_level == 'Acompanhamento' %}selected{% endif %}>Acompanhamento</option>
+                            <option value="Supervisor" {% if user.access_level == 'Supervisor' %}selected{% endif %}>Supervisor</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Salvar alterações</button>

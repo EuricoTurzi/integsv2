@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="card my-3">
+        <div class="card-header">Prestadores</div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for provider in providers %}
+                    <tr>
+                        <td>{{ provider.name }}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#providerModal{{ provider.id }}">
+                                Ver detalhes
+                            </button>
+                            <a href="{{ url_for('edit_provider', id=provider.id) }}" class="btn btn-success">Editar</a>
+                            <form action="{{ url_for('delete_provider', id=provider.id) }}" method="post" style="display: inline">
+                                <button type="submit" class="btn btn-danger">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <!-- Modal -->
+                    <div class="modal fade" id="providerModal{{ provider.id }}" tabindex="-1" role="dialog" aria-labelledby="providerModalLabel{{ provider.id }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="providerModalLabel{{ provider.id }}">{{ provider.name }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>Franquia de KM:</strong> {{ provider.km_allowance }}</p>
+                                    <p><strong>Franquia de Hora:</strong> {{ provider.hour_allowance.strftime("%H:%M") }}</p>
+                                    <p><strong>Valor do Acionamento:</strong> R$ {{ "{:.2f}".format(provider.activation_value).rstrip('0').rstrip('.') if provider.activation_value % 1 == 0 else "{:.2f}".format(provider.activation_value) }}</p>
+                                    <p><strong>Valor KM Excedente:</strong> R$ {{ "{:.2f}".format(provider.km_excess_value).rstrip('0').rstrip('.') if provider.km_excess_value % 1 == 0 else "{:.2f}".format(provider.km_excess_value) }}</p>
+                                    <p><strong>Valor Excedente:</strong> R$ {{ "{:.2f}".format(provider.excess_value).rstrip('0').rstrip('.') if provider.excess_value % 1 == 0 else "{:.2f}".format(provider.excess_value) }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,36 +1,69 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg p-3 mb-5 bg-white rounded">
-                <div class="card-body">
-                    <h2 class="card-title text-center mb-4">Informações do Acionamento</h2>
-                    <p><strong>Data e Hora Inicial:</strong> {{ start_time_formatted }}</p>
-                    <p><strong>Data e Hora Final:</strong> {{ end_time_formatted }}</p>
-                    <p><strong>Horas Totais:</strong> {{ total_hours_formatted }}</p>
-                    <p><strong>Prestador:</strong> {{ provider.name }}</p>
-                    <p><strong>Cliente: </strong> {{ client.name }}</p>
-                    <p><strong>Placas:</strong> {{ activation.plates }}</p>
-                    <p><strong>Agentes:</strong> {{ activation.agents }}</p>
-                    <p><strong>ID do Equipamento:</strong> {{ activation.equipment_id }}</p>
-                    <p><strong>KM Inicial:</strong> {{ activation.initial_km }}</p>
-                    <p><strong>KM Final:</strong> {{ activation.final_km }}</p>
-                    <p><strong>KM Total:</strong> {{ total_km }}</p>
-                    <hr>
-                    <h2 class="card-title text-center mb-4">Resumo do Prestador</h2>
-                    <p><strong>Horas Excedentes:</strong> {{ excess_hours_formatted }}</p>
-                    <p><strong>KM Excedente:</strong> {{ excess_km }}</p>
-                    <p><strong>Pedágio:</strong> R$ {{ toll }}</p>
-                    <p><strong>Valor Total:</strong> R$ {{ total_value }}</p>
-                    <hr>
-                    <h2 class="card-title text-center mb-4">Resumo do Cliente</h2>
-                    <p><strong>Horas Excedentes:</strong> {{ client_excess_hours_formatted }}</p>
-                    <p><strong>KM Excedente:</strong> {{ client_excess_km }}</p>
-                    <p><strong>Pedágio:</strong> R$ {{ client_toll }}</p>
-                    <p><strong>Valor Total:</strong> R$ {{ client_total_value_formatted }}</p>
-                </div>
+<style>
+    #card2{
+        margin-bottom: 25px;
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <a href="{{ url_for('list_activations') }}" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left"></i> Voltar para a lista de acionamentos</a>
+        <div class="card">
+            <div class="card-header"><i class="fas fa-info-circle"></i> Informações do Acionamento</div>
+            <div class="card-body">
+                <p><strong>Acionamento:</strong> {{ activation.id }}</p>
+                <p><strong>Data e Hora Inicial:</strong> {{ start_time_formatted }}</p>
+                <p><strong>Data e Hora Final:</strong> {{ end_time_formatted }}</p>
+                <p><strong>Horas Totais:</strong> {{ total_hours_formatted }}</p>
+                <p><strong>Prestador:</strong> {{ provider.name }}</p>
+                <p><strong>Cliente: </strong> {{ client.name }}</p>
+                <p><strong>Placas:</strong> {{ activation.plates }}</p>
+                <p><strong>Agentes:</strong> {{ activation.agents }}</p>
+                <p><strong>ID do Equipamento:</strong> {{ activation.equipment_id }}</p>
+                <p><strong>KM Inicial:</strong> {{ activation.initial_km }}</p>
+                <p><strong>KM Final:</strong> {{ activation.final_km }}</p>
+                <p><strong>KM Total:</strong> {{ total_km }}</p>
+            </div>
+        </div>
+
+        <div class="mb-4"></div>
+
+        <div class="card" id="card2">
+            <div class="card-header"><i class="fas fa-list-alt"></i> Resumo</div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Prestador</th>
+                            <th scope="col">Cliente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Horas Excedentes</th>
+                            <td>{{ excess_hours_formatted }}</td>
+                            <td>{{ client_excess_hours_formatted }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">KM Excedente</th>
+                            <td>{{ excess_km }}</td>
+                            <td>{{ client_excess_km }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Pedágio</th>
+                            <td>R$ {{ toll }}</td>
+                            <td>R$ {{ client_toll }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Valor Total</th>
+                            <td>R$ {{ total_value }}</td>
+                            <td>R$ {{ client_total_value_formatted }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

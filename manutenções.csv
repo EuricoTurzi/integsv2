@@ -1,4 +1,4 @@
-id,client_name,reason,billing,model,customization,equipment_number,problem_type,photos,treatment,status,date_completed,image_paths
+﻿id,client_name,reason,billing,model,customization,equipment_number,problem_type,photos,treatment,status,date_completed,image_paths
 1,GFL,Manutenção,Sem custo,GS 410,Termo branco,109833482,Sem problemas identificados,,Sem problemas identificados,Aprovado pela diretoria,17/05/2024 09:20,"[""C:\\Sistema InteGS\\static\\uploads\\109833482.jpeg""]"
 2,Mika Transportes,Devolução/Estoque,Sem custo,GS 410,Termo branco,109880939,Sem problemas identificados,,Sem problemas identificados,Aprovado,17/05/2024 11:19,"[""C:\\Sistema InteGS\\static\\uploads\\109880939.jpeg""]"
 3,Mika Transportes,Devolução/Estoque,Sem custo,GS 410,Termo branco + imã,109880970,Sem problemas identificados,,Sem problemas identificados,Aprovado,17/05/2024 11:20,"[""C:\\Sistema InteGS\\static\\uploads\\109880970.jpeg""]"
