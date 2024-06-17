@@ -17,7 +17,7 @@ InteGS é um sistema de gerenciamento integrado desenvolvido em Flask. Ele ofere
 
 1. Clone este repositório.
 2. Instale as dependências com `pip install -r requirements.txt`.
-3. Configure o banco de dados executando `flask db migrate` e `flask db upgrade`.
+3. Configure o banco de dados executando `flask db init`, então `flask db migrate` e `flask db upgrade`.
 4. Inicie o servidor com `python app.py`.
 
 ## Contribuição
