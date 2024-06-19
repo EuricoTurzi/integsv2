@@ -2173,3 +2173,9 @@ def update_status(activation_id):
 
     # Redireciona o usuário de volta para a página financeira
     return redirect(url_for('financial'))
+
+@app.route('/powerbi')
+@login_required
+@check_permissions(['Acompanhamento', 'Admin', 'Inteligência', 'CEO', 'Diretoria'])
+def powerbi():
+    return render_template('powerbi.html')
