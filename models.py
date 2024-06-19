@@ -19,7 +19,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)  # Nome de usuário
     email = db.Column(db.String(100), unique=True, nullable=False)  # E-mail do usuário
     password_hash = db.Column(db.String(128), nullable=False)  # Hash da senha do usuário
-    profile_picture = db.Column(db.String(100), default='/img/logo-golden.png')  # Imagem de perfil do usuário
+    profile_picture = db.Column(db.String(100), default='logo-golden.png')  # Imagem de perfil do usuário
     additional_info = db.Column(db.Text)  # Informações adicionais sobre o usuário
     access_level = db.Column(db.String(20), default='User')  # Nível de acesso do usuário
 

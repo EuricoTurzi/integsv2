@@ -41,6 +41,17 @@ login_manager.login_view = 'login'  # Definição da view de login
 def load_user(user_id):
     return User.query.get(int(user_id))  # Retorna o usuário pelo ID
 
+@app.cli.command("promote_to_admin")
+def promote_to_admin():
+    email = input("Enter the email of the user to promote: ")
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        print(f'No user found with email {email}')
+    else:
+        user.access_level = 'Admin'
+        db.session.commit()
+        print(f'User {email} has been promoted to Admin')
+
 # Importação das rotas
 from routes import *
 
