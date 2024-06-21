@@ -1,7 +1,6 @@
 #pdf_maintenance.py
 import os
 from io import BytesIO
-from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, TableStyle, Table
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle

@@ -38,7 +38,7 @@
                         {% if current_user.access_level in ['Admin', 'Expedição', 'Inteligência'] %}
                         <a class="dropdown-item" href="{{ url_for('entrance') }}">Formulário de Entrada</a>
                         {% endif %}
-                        {% if current_user.access_level in ['Admin', 'Comercial', 'Inteligência'] %}
+                        {% if current_user.access_level in ['Admin', 'Comercial', 'Inteligência', 'Quality'] %}
                         <a class="dropdown-item" href="{{ url_for('reactivation_form') }}">Formulário de Reativação</a>
                         {% endif %}
                     </div>
@@ -88,7 +88,7 @@
                         {% if current_user.access_level in ['Admin', 'Expedição', 'Manutenção', 'Inteligência', 'Diretoria', 'CEO'] %}
                         <a class="dropdown-item" href="{{ url_for('all_entrances') }}">Entradas</a>
                         {% endif %}
-                        {% if current_user.access_level in ['Admin', 'Comercial', 'Inteligência', 'Diretoria', 'CEO'] %}
+                        {% if current_user.access_level in ['Admin', 'Comercial', 'Inteligência', 'Diretoria', 'CEO', 'Quality'] %}
                         <a class="dropdown-item" href="{{ url_for('reactivations') }}">Reativações</a>
                         {% endif %}
                         <a class="dropdown-item" href="{{ url_for('sales_status') }}">Status</a>

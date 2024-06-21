@@ -1,6 +1,6 @@
 # routes.py
 import os, io, json
-from flask import render_template, redirect, url_for, flash, send_file, request, jsonify, make_response, Response
+from flask import render_template, redirect, url_for, flash, send_file, request, make_response, Response
 from flask_login import current_user, login_required, login_user, logout_user
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
@@ -1478,7 +1478,7 @@ def download_entrance_pdf(entrance_id):
 # Rota para o formulário de reativação
 @app.route('/reactivation/form', methods=['GET', 'POST'])
 @login_required  # Requer que o usuário esteja autenticado
-@check_permissions(['Admin', 'Comercial', 'Inteligência'])  # Verifica as permissões do usuário
+@check_permissions(['Admin', 'Comercial', 'Inteligência', 'Quality'])  # Verifica as permissões do usuário
 def reactivation_form():
     # Cria uma instância do formulário de reativação
     form = ReactivationForm()
@@ -1490,8 +1490,6 @@ def reactivation_form():
             client=form.client.data,
             reactivation_reason=form.reactivation_reason.data,
             request_channel=form.request_channel.data,
-            value=form.value.data,
-            total_value=form.total_value.data,
             observation=form.observation.data
         )
         
@@ -1531,7 +1529,7 @@ def reactivation_form():
 # Rota para a exibição de todas as reativações
 @app.route('/reactivation/all', methods=['GET'])
 @login_required  # Requer que o usuário esteja autenticado
-@check_permissions(['Admin', 'Comercial', 'CEO', 'Inteligência', 'Diretoria'])  # Verifica as permissões do usuário
+@check_permissions(['Admin', 'Comercial', 'CEO', 'Inteligência', 'Diretoria', 'Quality'])  # Verifica as permissões do usuário
 def reactivations():
     # Recupera todas as reativações do banco de dados
     reactivations = Reactivation.query.all()

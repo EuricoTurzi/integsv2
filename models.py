@@ -1,6 +1,6 @@
 # Importando as bibliotecas necessárias
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func, Numeric
+from sqlalchemy import Numeric
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
@@ -142,8 +142,6 @@ class Reactivation(db.Model):
     reactivation_reason = db.Column(db.String(120), nullable=False)  # Motivo da reativação
     request_channel = db.Column(db.String(90), nullable=False)  # Canal de solicitação
     equipments = db.relationship('Equipment', backref='reactivation', lazy=True)  # Relação com a tabela Equipment
-    value = db.Column(db.String(50), nullable=False)  # Valor da reativação
-    total_value = db.Column(db.String(50), nullable=False)  # Valor total da reativação
     observation = db.Column(db.Text)  # Observações sobre a reativação
 
     # Método para representar o objeto como uma string

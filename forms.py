@@ -1,6 +1,6 @@
 # forms.py
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
+from flask_wtf.file import FileAllowed
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, ValidationError, SelectField, MultipleFileField,IntegerField, BooleanField, FormField, FieldList, Form, DecimalField, DateTimeField, TimeField
 from wtforms.validators import DataRequired, Email, EqualTo, Optional, NumberRange
@@ -54,7 +54,7 @@ class SalesRequestForm(FlaskForm):
     cnpj = StringField('CNPJ', validators=[DataRequired()])
     contract_start = StringField('Início de Contrato', validators=[DataRequired()])
     vigency = SelectField('Vigência', choices=[('N/A', 'N/A'), ('6 meses', '6 meses'), ('12 meses', '12 meses'), ('18 meses', '18 meses'), ('24 meses', '24 meses'), ('30 meses', '30 meses'), ('36 meses', '36 meses')], validators=[DataRequired()])
-    reason = SelectField('Motivo', choices=[('Aquisição nova', 'Aquisição nova'), ('Manutenção', 'Manutenção'), ('Aditivo', 'Aditivo'),
+    reason = SelectField('Motivo', choices=[('Aquisição nova', 'Aquisição nova'), ('Manutenção', 'Manutenção'), ('Aditivo', 'Aditivo'), ('Acessórios', 'Acessórios'),
                                             ('Extravio', 'Extravio'), ('Teste', 'Teste'), ('Isca Fast', 'Isca Fast'), ('Isca Fast - Agente', 'Isca Fast - Agente'), ('Antenista', 'Antenista'), ('Reversa', 'Reversa')], validators=[DataRequired()])
     maintenance_number = StringField('Protocolo de Manutenção', default='N/A', validators=[Optional()])
     location = StringField('Local de Saída', default='N/A', validators=[Optional()])
@@ -113,7 +113,7 @@ class EntranceForm(FlaskForm):
                                            ('Tetis', 'Tetis'), ('Tetis R', 'Tetis R'), ('GSAir', 'GSAir'), ('Lokies', 'Lokies'),
                                            ('Imobilizador GS340', 'Imobilizador GS340'),('Localizador GS310', 'Localizador GS310'),
                                            ('Localizador GS390', 'Localizador GS390'), ('Bodycam', 'Bodycam')], validators=[DataRequired()])
-    customization = SelectField('Customização', choices=[('Caixa de papelão', 'Caixa de papelão'),('Caixa de papelão (bateria desacoplada)','Caixa de papelão (bateria desacoplada)'),
+    customization = SelectField('Customização', choices=[('Sem customização', 'Sem customização'), ('Caixa de papelão', 'Caixa de papelão'),('Caixa de papelão (bateria desacoplada)','Caixa de papelão (bateria desacoplada)'),
                                                          ('Caixa de papelão + D.F', 'Caixa de papelão + D.F'), ('Termo branco', 'Termo branco'), ('Termo branco + imã', 'Termo branco + imã'),
                                                          ('Termo branco + D.F', 'Termo branco + D.F'), ('Termo branco slim', 'Termo branco slim'), ('Termo branco slim + D.F + ETQ', 'Termo branco slim + D.F + ETQ'),
                                                          ('Termo cinza slim + D.F + ETQ', 'Termo cinza slim + D.F + ETQ'), ('Termo branco slim (isopor)', 'Termo branco slim (isopor)'),
@@ -142,8 +142,6 @@ class ReactivationForm(FlaskForm):
     reactivation_reason = StringField('Motivo da Reativação', validators=[DataRequired()])
     request_channel = StringField('Canal de Solicitação', validators=[DataRequired()])
     equipments = FieldList(FormField(EquipmentForm), min_entries=1, max_entries=30)
-    value = StringField('Valor Unitário', validators=[DataRequired()])
-    total_value = StringField('Valor Total', validators=[DataRequired()]) 
     observation = TextAreaField('Observações')
 
 class EquipmentStockForm(FlaskForm):

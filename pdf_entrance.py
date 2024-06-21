@@ -1,7 +1,6 @@
 import os
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Table, TableStyle, Paragraph, Spacer, Image, SimpleDocTemplate
-from reportlab.lib import colors
+from reportlab.platypus import Table, Paragraph, Spacer, Image, SimpleDocTemplate
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from io import BytesIO

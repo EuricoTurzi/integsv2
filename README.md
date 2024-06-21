@@ -37,4 +37,4 @@ Se você quiser contribuir para este projeto, sinta-se à vontade para fazer um 
 
 ## Licença
 
-Este projeto está licenciado sob a licença MIT.
+Este projeto está licenciado sob a licença GPL.
